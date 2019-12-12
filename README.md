@@ -1,2 +1,2 @@
 # SecureDropbox
-Project for a dstributed cloud storage by students
+Project for a distributed cloud storage by students
