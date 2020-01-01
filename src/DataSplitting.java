@@ -9,20 +9,23 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 	
 	public DataSplitting(int nbArray, BitSet bitArray)
 	{
-		for (int i = 1; i <= nbArray; i++) 
+		for (int i = 1; i <= nbArray; i++)		
+			//Create a new hashmap with the specified number of arrays
 		{
 			hmap.put(i, new BitSet());
-			hmap.get(i).set(0, true);
+			hmap.get(i).set(0, true);		//Needed to then write a bit in the bitset, 
+												//cause we use the length argument -1 to access the bit to modify
 		}
 	
-        for (int i = 0; i < bitArray.length(); i++)
+        for (int i = 0; i < bitArray.length(); i++)		
+        	//For each bit in the bitArray we copy its value to the corresponding array in hashmap
         {
-        	int bitSetNumber = i%nbArray+1;
+        	int bitSetNumber = i%nbArray +1;
         	int indexForModify = hmap.get(bitSetNumber).length();
         	
             if (bitArray.get(i)) 
             {
-            	hmap.get(bitSetNumber).set(indexForModify -1, true);
+            	hmap.get(bitSetNumber).set(indexForModify -1, true);		//Hence the importance of "hmap.get(i).set(0, true)"
             	hmap.get(bitSetNumber).set(indexForModify, true);           	
             }
             else
