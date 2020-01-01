@@ -13,7 +13,7 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 			//Create a new hashmap with the specified number of arrays
 		{
 			hmap.put(i, new BitSet());
-			hmap.get(i).set(0, true);		//Needed to then write a bit in the bitset, 
+			hmap.get(i).set(0, true);		 //Needed to then write a bit in the bitset, 
 												//cause we use the length argument -1 to access the bit to modify
 		}
 	
