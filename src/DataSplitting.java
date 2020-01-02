@@ -17,11 +17,14 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 												//cause we use the length argument -1 to access the bit to modify
 		}
 	
+		int bitSetNumber;
+		int indexForModify;
+		
         for (int i = 0; i < bitArray.length(); i++)		
         	//For each bit in the bitArray we copy its value to the corresponding array in hashmap
         {
-        	int bitSetNumber = i%nbArray +1;
-        	int indexForModify = hmap.get(bitSetNumber).length();
+        	bitSetNumber = i%nbArray +1;
+        	indexForModify = hmap.get(bitSetNumber).length();
         	
             if (bitArray.get(i)) 
             {
