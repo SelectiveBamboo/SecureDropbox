@@ -1,11 +1,10 @@
-
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Random;
 
 public class DataSplitting {
 
-HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
+	private HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 	
 	public DataSplitting(int nbArray, BitSet bitArray)
 	{
@@ -40,6 +39,11 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 
         System.out.println("End generating hmap");
      }
+	
+	public HashMap<Integer, BitSet> getHmap() 
+	{
+		return hmap;
+	}
 
     public static void main(String args[]) {
         BitSet bits1 = new BitSet();
@@ -55,6 +59,10 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 		}
         
         System.out.println("End generating bits");
-		new DataSplitting(8, bits1);
+		
+        DataSplitting splittedData = new DataSplitting(8, bits1);
+		DataReformation reformatedData = new DataReformation(splittedData.getHmap());
+		
+		System.out.println(reformatedData.getReassembledBitArray().equals(bits1));
     }
 }

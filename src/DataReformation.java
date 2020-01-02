@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class DataReformation {
 	
-	BitSet reassembledBitArray = new BitSet();
+	private BitSet reassembledBitArray = new BitSet();
 	
 	public DataReformation(HashMap<Integer, BitSet> hmap) 
 	{
@@ -36,6 +36,7 @@ public class DataReformation {
 			}
 		}
 		
+		
 		for (int i = 1; i <= toHandleArray; i++) 
 		{
 			if (hmap.get(i).get(lastIndex)) 
@@ -43,5 +44,10 @@ public class DataReformation {
 				reassembledBitArray.set(lastIndex + i -1);
 			}
 		}
+	}
+	
+	public BitSet getReassembledBitArray() 
+	{
+		return reassembledBitArray;
 	}
 }
