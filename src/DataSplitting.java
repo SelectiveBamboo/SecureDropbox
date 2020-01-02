@@ -1,11 +1,10 @@
-
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Random;
 
 public class DataSplitting {
 
-HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
+	private HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 	
 	public DataSplitting(int nbArray, BitSet bitArray)
 	{
@@ -17,11 +16,14 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 												//cause we use the length argument -1 to access the bit to modify
 		}
 	
+		int bitSetNumber;
+		int indexForModify;
+		
         for (int i = 0; i < bitArray.length(); i++)		
         	//For each bit in the bitArray we copy its value to the corresponding array in hashmap
         {
-        	int bitSetNumber = i%nbArray +1;
-        	int indexForModify = hmap.get(bitSetNumber).length();
+        	bitSetNumber = i%nbArray +1;
+        	indexForModify = hmap.get(bitSetNumber).length();
         	
             if (bitArray.get(i)) 
             {
@@ -37,6 +39,11 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 
         System.out.println("End generating hmap");
      }
+	
+	public HashMap<Integer, BitSet> getHmap() 
+	{
+		return hmap;
+	}
 
     public static void main(String args[]) {
         BitSet bits1 = new BitSet();
@@ -47,11 +54,14 @@ HashMap<Integer, BitSet> hmap = new HashMap<Integer, BitSet>();
 			if ( (rand.nextInt(50)) >= 25 ) 
 			{
 				bits1.set(i);
-			}
-			
+			}			
 		}
         
         System.out.println("End generating bits");
-		new DataSplitting(8, bits1);
+		
+        DataSplitting splittedData = new DataSplitting(8, bits1);
+		DataReformation reformatedData = new DataReformation(splittedData.getHmap());
+		
+		System.out.println(reformatedData.getReassembledBitArray().equals(bits1));
     }
 }
