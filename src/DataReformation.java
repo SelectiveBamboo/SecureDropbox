@@ -45,6 +45,7 @@ public class DataReformation {
 			}
 		}
 	}
+
 	
 	public BitSet getReassembledBitArray() 
 	{

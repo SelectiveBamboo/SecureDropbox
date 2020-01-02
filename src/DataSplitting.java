@@ -54,8 +54,7 @@ public class DataSplitting {
 			if ( (rand.nextInt(50)) >= 25 ) 
 			{
 				bits1.set(i);
-			}
-			
+			}			
 		}
         
         System.out.println("End generating bits");
