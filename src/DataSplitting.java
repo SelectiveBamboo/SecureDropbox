@@ -1,3 +1,9 @@
+/* The idea here is to get all the bits splitted and repartited through a specified number of BItset arrays. 
+ * Then it returns a hashmap of all of these bitset arrays. HashMap<Integer, BitSet>
+ * 
+ * 
+ * The last bit of the Bitset in parameter must be set, else the length() used isn't correct
+ */
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Random;
@@ -16,10 +22,10 @@ public class DataSplitting {
 												//cause we use the length argument -1 to access the bit to modify
 		}
 	
-		int bitSetNumber;
-		int indexForModify;
+		int bitSetNumber;		//the bitset's number in the Hashmap
+		int indexForModify;		//the index used in the bitsets in the Hashmap
 		
-        for (int i = 0; i < bitArray.length(); i++)		
+        for (int i = 0; i < (bitArray.length() -1); i++)		// -1 cause the last bit isn't relevant (must be set to true since we're using .length()) 
         	//For each bit in the bitArray we copy its value to the corresponding array in hashmap
         {
         	bitSetNumber = i%nbArray +1;
@@ -49,19 +55,26 @@ public class DataSplitting {
         BitSet bits1 = new BitSet();
         Random rand = new Random();
        
-        for (int i = 0; i < 500000000; i++) 
+        int i;
+        for ( i = 0; i < 98; i++) 
         {
 			if ( (rand.nextInt(50)) >= 25 ) 
 			{
 				bits1.set(i);
 			}			
 		}
+        bits1.set(i);
         
         System.out.println("End generating bits");
+        System.out.println(bits1);
 		
-        DataSplitting splittedData = new DataSplitting(8, bits1);
+        DataSplitting splittedData = new DataSplitting(10, bits1);
 		DataReformation reformatedData = new DataReformation(splittedData.getHmap());
+		System.out.println(splittedData.getHmap());
+		System.out.println(reformatedData.getReassembledBitArray());
 		
+		bits1.set(i, false);
 		System.out.println(reformatedData.getReassembledBitArray().equals(bits1));
+		
     }
 }
