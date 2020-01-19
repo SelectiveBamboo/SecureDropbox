@@ -43,7 +43,7 @@ JV = java --class-path $(SOURCEDIR)
 CLASSES = \
 	$(SOURCEDIR)/DataReformation.java \
 	$(SOURCEDIR)/DataSplitting.java \
-	$(SOURCEDIR)/SecureDropbox.java
+	$(SOURCEDIR)/SecureDropboxTest.java
 
 #
 # the default make target entry
