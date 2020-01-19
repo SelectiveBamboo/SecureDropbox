@@ -67,7 +67,7 @@ classes: $(CLASSES:.java=.class)
 # $(JV) is the java command set at start of this file
 
 test:
-	$(JV) SecureDropbox --size 96
+	$(JV) SecureDropboxTest --size 96
 
 
 #

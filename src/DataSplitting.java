@@ -51,7 +51,9 @@ public class DataSplitting {
 		return hmap;
 	}
 
-    public static void main(String args[]) {
+  
+	
+	public static void main(String args[]) {
         BitSet bits1 = new BitSet();
         Random rand = new Random();
        
