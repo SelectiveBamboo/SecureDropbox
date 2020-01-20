@@ -7,7 +7,7 @@ import java.math.BigInteger;
 class SecureDropboxTest
 {
 
-	private static final int BUFFER_SIZE = 1024;
+	private static final int BUFFER_SIZE = 1;
 	private static final String VERSION = "1.0";
 
 	public static void usage()
@@ -20,7 +20,7 @@ class SecureDropboxTest
 				+ "Options:\n"
 				+ "\n"
 				+ "    --file FILE : file to copy over the RAID5 vDisk array.\n"
-				+ "    --size N    : number of vDisk in the RAID5 array. Must be greater than 3.\n"
+				+ "    --nb N    : number of vDisk in the RAID5 array. Must be 3 at least.\n"
 				+ "\n"
 				+ "    --help      : display this message.\n"
 			);
@@ -37,10 +37,10 @@ class SecureDropboxTest
 
 
 		// Parse command line argument
-		// --size N : specify the size of the data sample to generate
+		// --nb N : specify the number of clouds used
 		for (int i = 0; i < args.length; i++) 
 		{			
-			if (args[i].equals("--size"))
+			if (args[i].equals("--nb"))
 			{
 				try {
 					cloudsNb = Integer.parseInt(args[i+1]);
@@ -68,7 +68,7 @@ class SecureDropboxTest
 					System.exit(1);
 				}
 			}
-			else if (args[i].equals("--clouds"))
+			else if (args[i].equals("--cloud"))
 			{
 				
 			}
@@ -105,19 +105,21 @@ class SecureDropboxTest
 		{
 			ex.printStackTrace();
 		}
-
-		System.out.println("bits generated:");
-		System.out.println(bits1);
 			
 		DataSplitting splittedData = new DataSplitting(cloudsNb, bits1);
-		System.out.println("Generated hmap");
-		System.out.println(splittedData.getHmap());
-
+		
 		DataReformation reformatedData = new DataReformation(splittedData.getHmap());
 		
 		bits1.set( bits1.length()-1, false);
-		System.out.println("Does bits arrays are equals?:");
-		System.out.println(reformatedData.getReassembledBitArray().equals(bits1));
+		if (reformatedData.getReassembledBitArray().equals(bits1)) 
+		{
+			System.out.println("Functions DataReformation and DataSplitting are still working well together");
+		}
+		else
+		{
+			System.err.println("Problem somewhere with DataReformation and DataSplitting");
+		}
+		
 
 		long end = System.currentTimeMillis();
 		System.out.println("Program took: " + (end - start) + " ms");
