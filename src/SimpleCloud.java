@@ -35,15 +35,16 @@ public class SimpleCloud extends Cloud {
 		Sardine sardine = SardineFactory.begin(username, password);
 		
 		InputStream	fis = new FileInputStream(new File(localFilePath));
-		sardine.put(url+nameOnCloud, fis);
-		
+		sardine.put(url+nameOnCloud, fis);		
 	}
+	
 	
 	public void deleteFile(String nameOnCloud) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);		
 		sardine.delete(url+nameOnCloud);
 	}
+	
 	
 	public boolean doesExist(String nameOnCloud)
 	{
@@ -61,6 +62,7 @@ public class SimpleCloud extends Cloud {
 		return doesExist;
 	}
 
+	
 	public InputStream getFile(String nameOnCloud) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
@@ -70,23 +72,12 @@ public class SimpleCloud extends Cloud {
 		return is;
 	}
 	
+	
 	public List<DavResource> list(int depth) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
 		List<DavResource> resources = sardine.list(url, depth);
 
 		return resources;
-	}
-	
+	}	
 }
-
-
-
-
-
-
-
-
-
-
-
