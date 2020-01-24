@@ -63,7 +63,7 @@ public class SimpleCloud extends Cloud {
 	}
 
 	
-	public InputStream getFile(String nameOnCloud) throws IOException 
+	public InputStream getInputStreamFile(String nameOnCloud) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
 		
