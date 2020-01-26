@@ -171,4 +171,11 @@ public class CloudGoogleDrive {
     	
 		return outputStream;
     }
+    
+    public void deletefile(String fileId) throws IOException 
+    {
+    	Drive driveService = GoogleDriveUtils.getDriveService();
+    	
+    	driveService.files().delete(fileId);
+    }
 }
