@@ -57,12 +57,12 @@ public class SecureDropbox {
 					} 
 					catch (NumberFormatException e) 
 					{
-						System.err.println("Argument of " + args[i] + " must be an integer.");
+						System.err.println("ERROR: Argument of " + args[i] + " must be an integer.");
 						System.exit(1);
 					}
 					if (cloudsNb < 3)
 					{
-						System.err.println("You must provide at least 3 vDisk for RAID5 emulation.");
+						System.err.println("ERROR: You must provide at least 3 vDisk for RAID5 emulation.");
 						System.exit(1);
 					}
 					
@@ -76,7 +76,7 @@ public class SecureDropbox {
 					}
 					else
 					{
-						System.err.println("Wrong path provided.");
+						System.err.println("ERROR: Wrong path provided.");
 						System.exit(1);
 					}
 					
