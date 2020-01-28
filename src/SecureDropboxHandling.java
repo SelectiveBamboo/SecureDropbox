@@ -105,6 +105,7 @@ public class SecureDropboxHandling extends Thread {
 		}
 		else
 		{
+			System.err.println("ERROR: unrecognized action on a file:" + pathToFile + nameOfFile);
 			System.exit(1);
 		}
 	}
