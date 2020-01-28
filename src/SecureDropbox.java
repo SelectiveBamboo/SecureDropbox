@@ -3,6 +3,9 @@ import java.io.File;
 public class SecureDropbox {
 	
 	private static final String VERSION = "1.0";
+	
+	String path;
+	int cloudsNb = 0;
 
 	public static void usage()
 	{
@@ -22,11 +25,26 @@ public class SecureDropbox {
 		System.exit(1);
 	}
 
+	
+	
 	public static void main(String[] args) 
 	{	
-		int cloudsNb = 0;
-		String path;
+		dealWithParams(args);
 		
+		while(true)
+		{
+			Listen eventCaptured = new Listen(path);
+			
+			Thread newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
+			newThread.start();
+		}
+		
+	}
+
+	
+	
+	private static void dealWithParams(String[] args) 
+	{		
 		for (int i = 0; i < args.length; i++) 
 		{
 			String s = args[i];
@@ -36,7 +54,9 @@ public class SecureDropbox {
 				case "--clouds":
 					try {
 						cloudsNb = Integer.parseInt(args[i+1]);
-					} catch (NumberFormatException e) {
+					} 
+					catch (NumberFormatException e) 
+					{
 						System.err.println("Argument of " + args[i] + " must be an integer.");
 						System.exit(1);
 					}
@@ -64,15 +84,12 @@ public class SecureDropbox {
 					
 				case "--help":
 					usage();
+					
 					break;
 	
 				default:
 					break;
-			}
-			
+			}	
 		}
-		
-		
 	}
-
 }
