@@ -1,36 +1,54 @@
 import java.net.InetAddress;
 
 
-public class Cloud {
+
+public abstract class Cloud {
 
 	protected InetAddress ipAddress;
 	protected String url;		//Generic URL to reach the cloud, like www.example.com 
-									//with eventually the directory in which write
+	protected String path;			//with eventually the directory in which write
 									//have to end with an '/'
 	protected String username;
 	protected String password;
+
 	
-	/*
-	 * public Cloud(InetAddress ipAddress) { this(null, ipAddress, null, null); }
-	 * 
-	 * public Cloud(String url) { this(url, null, null, null); }
-	 * 
-	 * public Cloud(String url, String username, String password) { this(url, null,
-	 * username, password); }
-	 * 
-	 * public Cloud(InetAddress ipAdress, String username, String password) {
-	 * this(null, ipAdress, username, password); }
-	 */
-	
-	public Cloud(String url, InetAddress ipAddress, String username, String password ) 
-	{
-		
-		//TODO 
-		//Add a test for URL with an exception throw
-		this.url = url;
-		
+	public InetAddress getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(InetAddress ipAddress) {
 		this.ipAddress = ipAddress;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	

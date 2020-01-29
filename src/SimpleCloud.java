@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.util.List;
 
@@ -9,26 +11,27 @@ import com.github.sardine.*;
 
 public class SimpleCloud extends Cloud {
 	
-	public SimpleCloud(InetAddress ipAddress, String username, String password )
+	
+	//TODO 
+	//Something with all these constructors !!!!
+	public SimpleCloud(String url) 
 	{
-		super(null, ipAddress, username, password);
+		this(url, null, null, null);
 	}
 	
-	public SimpleCloud(String url)
+	public SimpleCloud(InetAddress ipAddress) 
 	{
-		super(url, null, null, null);
+		this(null, ipAddress, null, null);
 	}
+	
+	public SimpleCloud(String url, InetAddress ipAddress, String username, String password ) 
+	{
+			this.ipAddress = ipAddress;
+			this.url = url;
 
-	public SimpleCloud(InetAddress ipAddress)
-	{
-		super(null, ipAddress, null, null);
+			this.username = username;
+			this.password = password;
 	}
-	
-	public SimpleCloud(String url, String username, String password )
-	{
-		super(url, null, username, password);
-	}
-	
 	
 	public void putFile(String nameOnCloud, String localFilePath) throws IOException 
 	{
@@ -63,13 +66,41 @@ public class SimpleCloud extends Cloud {
 	}
 
 	
-	public InputStream getInputStreamFile(String nameOnCloud) throws IOException 
+	public File getFile(String nameOnCloud) throws IOException, Exception
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
+		InputStream is = null;
+		File file;
 		
-		InputStream is = sardine.get(url+nameOnCloud);
+		if (path != null) 
+		{
+			is = sardine.get(url+path+nameOnCloud);
+		}
+		else
+		{
+			is = sardine.get(url+nameOnCloud);
+		}
 		
-		return is;
+		if (is == null) 
+		{
+			throw new Exception();
+		}
+		
+		file = new File(nameOnCloud);
+		OutputStream fos = new FileOutputStream(file);
+
+		byte[] buffer = new byte[8 * 1024];
+		int bytesRead;
+		
+		while ((bytesRead = is.read(buffer)) != -1) 
+		{
+			fos.write(buffer, 0, bytesRead);
+		}
+
+		fos.close();
+		is.close();
+		
+		return file;
 	}
 	
 	

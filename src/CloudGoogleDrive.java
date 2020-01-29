@@ -7,7 +7,6 @@
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List; 
@@ -19,7 +18,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
-public class CloudGoogleDrive {
+public class CloudGoogleDrive extends Cloud {
 	
     private File _createFile(String googleFolderIdParent, String contentType, //
             String customFileName, AbstractInputStreamContent uploadStreamContent) throws IOException 
@@ -115,7 +114,7 @@ public class CloudGoogleDrive {
     }
     
     
-    public List<File> getGoogleSubFolders(String googleFolderIdParent) throws IOException 
+    public List<File> getSubFolders(String googleFolderIdParent) throws IOException 
     {
         Drive driveService = GoogleDriveUtils.getDriveService();
  
@@ -154,25 +153,32 @@ public class CloudGoogleDrive {
  
     
     // com.google.api.services.drive.model.File
-    public List<File> getGoogleRootFolders() throws IOException 
+    public List<File> getRootFolders() throws IOException 
     {
-        return getGoogleSubFolders(null);
+        return getSubFolders(null);
     }
     
-    public OutputStream getInputStreamFile(String fileId) throws IOException 
+    
+    public java.io.File getFile(String fileId) throws IOException 
     {
-    	OutputStream outputStream = new ByteArrayOutputStream();
+    	java.io.File file = new java.io.File(fileId);
+    	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     	Drive driveService = GoogleDriveUtils.getDriveService();
     	
     	driveService.files().get(fileId)
     	    .executeMediaAndDownloadTo(outputStream);
 
+    	try (java.io.FileOutputStream fos = new java.io.FileOutputStream(file))
+    	{
+    		fos.write(outputStream.toByteArray());
+    	}
     	
-		return outputStream;
+		return file;
     }
     
-    public void deletefile(String fileId) throws IOException 
+    
+    public void deleteFile(String fileId) throws IOException 
     {
     	Drive driveService = GoogleDriveUtils.getDriveService();
     	
