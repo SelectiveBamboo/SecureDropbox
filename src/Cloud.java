@@ -7,7 +7,7 @@ public abstract class Cloud {
 	protected InetAddress ipAddress;
 	protected String url;		//Generic URL to reach the cloud, like www.example.com 
 	protected String path;			//with eventually the directory in which write
-									//have to end with an '/'
+
 	protected String username;
 	protected String password;
 

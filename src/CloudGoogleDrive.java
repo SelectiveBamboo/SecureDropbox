@@ -5,6 +5,8 @@
  * 
  */
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -66,6 +68,16 @@ public class CloudGoogleDrive extends Cloud {
     }
  
     
+    public void updateFile(Drive drive, String fileId, String nameOnCloud) throws IOException 
+    {
+    	File file = drive.files().get(fileId).execute();
+		java.io.File fileContent = new java.io.File(nameOnCloud);
+	    FileContent mediaContent = new FileContent( "text/plain", fileContent);
+
+	    // Send the request to the API.
+	    drive.files().update(fileId, file, mediaContent).execute();
+    }
+    
     // com.google.api.services.drive.model.File
     public List<File> getFilesByLikeName(String fileNameLike) throws IOException 
     {
@@ -96,7 +108,7 @@ public class CloudGoogleDrive extends Cloud {
     }
     
     
-    public File getFilesByExactName(String exactFileName) throws IOException 
+    public File getFileByExactName(String exactFileName) throws IOException 
     {
     	File file = null;
     	
@@ -159,12 +171,14 @@ public class CloudGoogleDrive extends Cloud {
     }
     
     
-    public java.io.File getFile(String fileId) throws IOException 
+    public java.io.File getFile(String fileName) throws IOException 
     {
-    	java.io.File file = new java.io.File(fileId);
+    	java.io.File file = new java.io.File(fileName);
     	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
     	Drive driveService = GoogleDriveUtils.getDriveService();
+    	
+    	String fileId = getFileByExactName(fileName).getId();
     	
     	driveService.files().get(fileId)
     	    .executeMediaAndDownloadTo(outputStream);
@@ -177,11 +191,38 @@ public class CloudGoogleDrive extends Cloud {
 		return file;
     }
     
+    public void putFile(String nameOnCloud, String localFilePath) 
+    {
+    	
+    	
+    	try (java.io.InputStream fis = new java.io.FileInputStream(new java.io.File(localFilePath)))
+    	{
+    		Drive drive = GoogleDriveUtils.getDriveService();
+			String fileId = getFileByExactName(nameOnCloud).getId();
+			
+			if (fileId != null) 
+			{
+				updateFile(drive, fileId, nameOnCloud);
+			}
+			else
+			{
+				createFile(path, "text/plain", nameOnCloud, fis);
+			}
+			
+		} 
+    	catch (IOException e) 
+    	{
+			e.printStackTrace();
+		}
+    	
+    }
     
-    public void deleteFile(String fileId) throws IOException 
+    
+    public void deleteFile(String fileName) throws IOException 
     {
     	Drive driveService = GoogleDriveUtils.getDriveService();
     	
+    	String fileId = getFileByExactName(fileName).getId();
     	driveService.files().delete(fileId);
     }
 }

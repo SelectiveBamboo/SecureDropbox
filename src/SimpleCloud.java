@@ -42,20 +42,20 @@ public class SimpleCloud extends Cloud {
 	}
 	
 	
-	public void deleteFile(String nameOnCloud) throws IOException 
+	public void deleteFile(String fileName) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);		
-		sardine.delete(url+nameOnCloud);
+		sardine.delete(url+fileName);
 	}
 	
 	
-	public boolean doesExist(String nameOnCloud)
+	public boolean doesExist(String fileName)
 	{
 		boolean doesExist = false;
 		
 		Sardine sardine = SardineFactory.begin(username, password);
 		try {
-			doesExist = sardine.exists(url+nameOnCloud);
+			doesExist = sardine.exists(url+fileName);
 		} 
 		catch (IOException e) 
 		{
@@ -66,7 +66,7 @@ public class SimpleCloud extends Cloud {
 	}
 
 	
-	public File getFile(String nameOnCloud) throws IOException, Exception
+	public File getFile(String fileName) throws IOException, Exception
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
 		InputStream is = null;
@@ -74,11 +74,11 @@ public class SimpleCloud extends Cloud {
 		
 		if (path != null) 
 		{
-			is = sardine.get(url+path+nameOnCloud);
+			is = sardine.get(url+path+fileName);
 		}
 		else
 		{
-			is = sardine.get(url+nameOnCloud);
+			is = sardine.get(url+fileName);
 		}
 		
 		if (is == null) 
@@ -86,7 +86,7 @@ public class SimpleCloud extends Cloud {
 			throw new Exception();
 		}
 		
-		file = new File(nameOnCloud);
+		file = new File(fileName);
 		OutputStream fos = new FileOutputStream(file);
 
 		byte[] buffer = new byte[8 * 1024];
