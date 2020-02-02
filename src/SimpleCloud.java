@@ -36,6 +36,10 @@ public class SimpleCloud extends Cloud {
 			
 			list(1);
 			
+			File f = new File("connectionTest");
+			putFile("connectionTest", f.getAbsolutePath());
+			deleteFile("connectionTest");
+			
 	}
 	
 	public void putFile(String nameOnCloud, String localFilePath) throws IOException 

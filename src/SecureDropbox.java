@@ -1,5 +1,8 @@
 import java.io.File;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -119,7 +122,7 @@ public class SecureDropbox {
 
 					
 				case "2": //Nextcloud - Owncloud
-					
+					initializeSimpleCloud(sc);
 					break;
 			
 					
@@ -144,6 +147,7 @@ public class SecureDropbox {
 		catch (IOException e) 
 		{
 			e.printStackTrace();
+			System.err.println("ERROR: when adding the cloud, operation aborted");
 			System.exit(1);
 		}
 		System.out.println("Cloud added !");
@@ -152,11 +156,23 @@ public class SecureDropbox {
 	private static void initializeSimpleCloud(Scanner sc)
 	{
 		System.out.print("\n\nIp address of the cloud (press enter if none): ");
-		String ipAddress = sc.nextLine();
-		if (ipAddress.equals("")) 
+		InetAddress ipAddress = null;
+		try {
+			ipAddress = InetAddress.getByAddress(sc.nextLine().getBytes());
+			
+			if ( ipAddress.equals(InetAddress.getByAddress("".getBytes())) ) 
+			{
+				ipAddress = null;
+			}
+		} 
+		catch (UnknownHostException e1) 
 		{
-			ipAddress = null;
+			e1.printStackTrace();
+			System.err.println("ERROR: with Ip address provided");
+			
+			initializeSimpleCloud(sc);
 		}
+		
 		
 		System.out.print("\n\nURL of the cloud (press enter if none): ");
 		String url = sc.nextLine();
@@ -179,7 +195,17 @@ public class SecureDropbox {
 			password = null;
 		}
 		
-		
+		try {
+			SimpleCloud cloud = new SimpleCloud(url, ipAddress, username, password);
+			clouds.add(cloud);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			System.err.println("ERROR: when adding the cloud, operation aborted");
+			System.exit(1);
+		}
+		System.out.println("Cloud added !");
 		
 	}
 }
