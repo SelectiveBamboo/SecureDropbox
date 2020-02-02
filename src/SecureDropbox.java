@@ -1,9 +1,15 @@
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
+
+import com.google.api.services.drive.Drive;
 
 public class SecureDropbox {
 	
 	private static final String VERSION = "1.0";
+	
+	static List<Cloud> clouds;
 	
 	static String path;
 	static int cloudsNb = 0;
@@ -30,7 +36,7 @@ public class SecureDropbox {
 	
 	public static void main(String[] args) 
 	{	
-		dealWithParams(args);
+		initialization(args);
 		
 		while(true)
 		{
@@ -44,7 +50,7 @@ public class SecureDropbox {
 
 	
 	
-	private static void dealWithParams(String[] args) 
+	private static void initialization(String[] args) 
 	{		
 		for (int i = 0; i < args.length; i++) 
 		{
@@ -102,27 +108,79 @@ public class SecureDropbox {
 			System.out.println("Type :\n"
 					+ "'1' for Google Drive \n"
 					+ "'2' for Nextcloud/Owncloud");
+			
 			String cloudType = sc.nextLine();
 			
 			switch (cloudType) 
 			{
 				case "1": //Google Drive
-					
+					initializeCloudGoogle(sc);
 					break;
 
 					
-				case "2": //Nextcloud/Owncloud
+				case "2": //Nextcloud - Owncloud
 					
 					break;
 			
 					
 				default:
-					System.err.println("ERROR: Can't recognize input.");
+					System.err.println("ERROR: Can not recognize input.");
+					i--;
+					
 					break;
 			}
 			
-			
+			sc.close();
 		}
+	}
+	
+	
+	private static void initializeCloudGoogle(Scanner sc)
+	{
+		try {
+			CloudGoogleDrive cloud = new CloudGoogleDrive();
+			clouds.add(cloud);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+		System.out.println("Cloud added !");
+	}
+	
+	private static void initializeSimpleCloud(Scanner sc)
+	{
+		System.out.print("\n\nIp address of the cloud (press enter if none): ");
+		String ipAddress = sc.nextLine();
+		if (ipAddress.equals("")) 
+		{
+			ipAddress = null;
+		}
+		
+		System.out.print("\n\nURL of the cloud (press enter if none): ");
+		String url = sc.nextLine();
+		if (url.equals("")) 
+		{
+			url = null;
+		}
+		
+		System.out.print("\n\nUsername to acces the cloud (press enter if none): ");
+		String username = sc.nextLine();
+		if (username.equals("")) 
+		{
+			username = null;
+		}
+		
+		System.out.print("\n\nPassword to acces the cloud (press enter if none): ");
+		String password = sc.nextLine();
+		if (password.equals("")) 
+		{
+			password = null;
+		}
+		
+		
+		
 	}
 }
 

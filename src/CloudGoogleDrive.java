@@ -22,6 +22,11 @@ import com.google.api.services.drive.model.FileList;
 
 public class CloudGoogleDrive extends Cloud {
 	
+	public CloudGoogleDrive() throws IOException 
+	{
+		GoogleDriveUtils.getDriveService();
+	}
+	
     private File _createFile(String googleFolderIdParent, String contentType, //
             String customFileName, AbstractInputStreamContent uploadStreamContent) throws IOException 
     {
@@ -165,7 +170,7 @@ public class CloudGoogleDrive extends Cloud {
  
     
     // com.google.api.services.drive.model.File
-    public List<File> getRootFolders() throws IOException 
+    public List<File> getRootFolder() throws IOException 
     {
         return getSubFolders(null);
     }
