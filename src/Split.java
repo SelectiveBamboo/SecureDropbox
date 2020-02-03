@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.util.*;
 
@@ -14,12 +13,12 @@ public class Split {
 
 		hashmap_size = map.size();
 
-		for (int i = 0; i < hashmap_size; i++)		
-			//Create a new hashmap with the specified number
+		for (int i = 0; i < hashmap_size; i++)
+		// Create a new hashmap with the specified number
 		{
 			new_map.put(i, new BitSet());
 		}
-		
+
 		for (j = 0; j < hashmap_size; j++) {
 			i = 0;
 			k = 0;
@@ -33,11 +32,7 @@ public class Split {
 				tab_length = tab.length();
 				bytes = tab.toByteArray();
 
-				
-
-				
-
-				if (tab.get(j) ==true) {
+				if (tab.get(j) == true) {
 					bit = 1;
 					new_map.get(j).set(k, true);
 
@@ -47,10 +42,8 @@ public class Split {
 
 				}
 
-				
 				k++;
 			}
-
 
 		}
 
