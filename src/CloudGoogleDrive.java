@@ -196,30 +196,23 @@ public class CloudGoogleDrive extends Cloud {
 		return file;
     }
     
-    public void putFile(String nameOnCloud, String localFilePath) 
-    {
-    	
-    	
-    	try (java.io.InputStream fis = new java.io.FileInputStream(new java.io.File(localFilePath)))
+    public void putFile(String nameOnCloud, String localFilePath) throws IOException 
+    { 	
+    	java.io.InputStream fis = new java.io.FileInputStream(new java.io.File(localFilePath));
+
+    	Drive drive = GoogleDriveUtils.getDriveService();
+    	String fileId = getFileByExactName(nameOnCloud).getId();
+
+    	if (fileId != null) 
     	{
-    		Drive drive = GoogleDriveUtils.getDriveService();
-			String fileId = getFileByExactName(nameOnCloud).getId();
-			
-			if (fileId != null) 
-			{
-				updateFile(drive, fileId, nameOnCloud);
-			}
-			else
-			{
-				createFile(path, "text/plain", nameOnCloud, fis);
-			}
-			
-		} 
-    	catch (IOException e) 
+    		updateFile(drive, fileId, nameOnCloud);
+    	}
+    	else
     	{
-			e.printStackTrace();
-		}
-    	
+    		createFile(path, "text/plain", nameOnCloud, fis);
+    	}
+			
+    	fis.close();  	
     }
     
     
