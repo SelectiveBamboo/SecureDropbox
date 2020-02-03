@@ -33,11 +33,9 @@ public class Split {
 				tab_length = tab.length();
 				bytes = tab.toByteArray();
 
-				System.out.println("la clé = " + key + ", valeur = " + tab + ", taille tableau = " + tab_length
-						+ ", taille hashmap = " + hashmap_size + ", place attribuée : " + bytes + "\n");
+				
 
 				
-				System.out.println(tab.get(j)); // retourne un booléen
 
 				if (tab.get(j) ==true) {
 					bit = 1;
@@ -49,15 +47,12 @@ public class Split {
 
 				}
 
-				System.out.println(bit + "\n");
-				System.out.println(j + " " + k + "\n");
-
+				
 				k++;
 			}
 
 
 		}
-		System.out.println(new_map);
 
 	}
 
