@@ -45,7 +45,7 @@ public class SecureDropbox {
 		{
 			Listen eventCaptured = new Listen(path);
 			
-			Thread newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
+			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
 			newThread.start();
 		}
 		

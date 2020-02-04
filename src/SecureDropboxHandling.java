@@ -9,10 +9,24 @@ import java.util.BitSet;
 import java.util.List;
 
 public class SecureDropboxHandling extends Thread {
-	
+
 	protected static final int BUFFER_SIZE = 1;
 	
-	public SecureDropboxHandling(String pathToFile,String nameOfFile, String actionOnFile, List<Cloud> clouds) throws IOException 
+	private String nameOfFile;
+	private String pathToFile;
+	private String actionOnFile;
+	private List<Cloud> clouds;
+	
+	public SecureDropboxHandling(String nameOfFile, String pathToFile, String actionOnFile, List<Cloud> clouds)
+	{
+		this.nameOfFile = nameOfFile;
+		this.pathToFile = pathToFile;
+		this.actionOnFile = actionOnFile;
+		this.clouds = clouds;
+	}
+	
+	
+	public void run()	//TODO How to throw exceptions ? Overwrite run method ?
 	{
 		if (actionOnFile.equals("deleted"))
 		{
@@ -30,7 +44,7 @@ public class SecureDropboxHandling extends Thread {
 		}
 		else if (actionOnFile.equals("created") || actionOnFile.equals("modified"))
 		{
-			putFileChangesOnCloud(nameOfFile, pathToFile, clouds);
+			putFilesChangesOnCloud(nameOfFile, pathToFile, clouds);
 		}
 		else
 		{
@@ -39,7 +53,7 @@ public class SecureDropboxHandling extends Thread {
 		}
 	}
 	
-	private void putFileChangesOnCloud(String nameOfFile, String pathToFile, List<Cloud> clouds) 
+	private void putFilesChangesOnCloud(String nameOfFile, String pathToFile, List<Cloud> clouds) 
 	{
 		BitSet bits;
 		
