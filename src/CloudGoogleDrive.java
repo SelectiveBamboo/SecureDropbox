@@ -29,27 +29,29 @@ public class CloudGoogleDrive extends Cloud {
 	
 	public CloudGoogleDrive() throws IOException 
 	{
+		boolean isFolderInquired = false;
 		GoogleDriveUtils.getDriveService();
 		
 		Scanner sc = new Scanner(System.in);
-		System.out.println("\nWhat's the folder in which you would write ? \n"
-				+ "Inquire the full path to this folders  /../../../../\n");
 		
-		String str = sc.nextLine();
-		
-		if (str.contentEquals("")) 
+		while ( !isFolderInquired ) 
 		{
+			System.out.println("\nWhat's the folder in which you would write ? \n"
+					+ "Inquire the full path to this folders  /../../../../\n");
 			
-		}
-		else if(str.matches("^/?([a-zA-Z_0-9]+/)+$"))	//if match a folder path 
-		{
-			getFolderByName(str);
-		}
-		else
-		{
+			String str = sc.nextLine();
 			
+			if (str.contentEquals("")) 
+			{
+				folder = getRootFolder().get(0).getId();
+				isFolderInquired = true;
+			}
+			else if(str.matches("^/?([a-zA-Z_0-9]+/)+$"))	//if match a folder path 
+			{
+				folder = getFolderByName(str).getId();
+				isFolderInquired = true;
+			}
 		}
-		
 		
 	}
 	
@@ -110,14 +112,6 @@ public class CloudGoogleDrive extends Cloud {
     }
     
     // com.google.api.services.drive.model.File
-    public File getFolderByName(String path)
-    {
-    	File f;
-    	
-    	return f;
-    }
-    
-    // com.google.api.services.drive.model.File
     public List<File> getFilesByLikeName(String fileNameLike) throws IOException 
     {
         Drive driveService = GoogleDriveUtils.getDriveService();
@@ -164,6 +158,44 @@ public class CloudGoogleDrive extends Cloud {
     	return file;
     }
     
+    // com.google.api.services.drive.model.File
+    public File getFolderByName(String path) throws FolderNameNotFoundException
+    {
+    	File f = null;
+    	
+    	try {
+    		List<File> foldersReturned;
+    		f = getRootFolder().get(0);
+
+    		String[] subfolders = path.split("/");
+
+    		for (int i = 0; i < subfolders.length; i++) 
+    		{
+    			foldersReturned = getSubFolders(f.getId());
+
+    			int j = 0;
+    			while ( !foldersReturned.get(j).getName().equals(subfolders[i]) && j<foldersReturned.size() ) 
+    			{
+    				j++;
+    			}
+
+    			if ( j<foldersReturned.size() ) 
+    			{
+    				f = foldersReturned.get(j);
+    			}
+    			else
+    			{
+    				throw new FolderNameNotFoundException(subfolders[i], path);
+    			}
+    		}
+    	}
+    	catch (IOException ioe)
+    	{
+    		ioe.printStackTrace();
+    	}
+    	
+    	return f;
+    }
     
     public List<File> getSubFolders(String googleFolderIdParent) throws IOException 
     {
