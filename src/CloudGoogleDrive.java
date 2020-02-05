@@ -110,7 +110,7 @@ public class CloudGoogleDrive extends Cloud {
     }
     
     // com.google.api.services.drive.model.File
-    public File getFolderByName()
+    public File getFolderByName(String path)
     {
     	File f;
     	
