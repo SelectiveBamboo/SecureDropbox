@@ -81,9 +81,9 @@ public class SimpleCloud extends Cloud {
 		InputStream is = null;
 		File file;
 		
-		if (path != null) 
+		if (folder != null) 
 		{
-			is = sardine.get(url+path+fileName);
+			is = sardine.get(url+folder+fileName);
 		}
 		else
 		{
@@ -98,7 +98,7 @@ public class SimpleCloud extends Cloud {
 		file = new File(fileName);
 		OutputStream fos = new FileOutputStream(file);
 
-		byte[] buffer = new byte[8 * 1024];
+		byte[] buffer = new byte[1024];
 		int bytesRead;
 		
 		while ((bytesRead = is.read(buffer)) != -1) 

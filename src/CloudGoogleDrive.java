@@ -1,4 +1,7 @@
 /*
+ * Path in CloudGoogleDrive is actualy the Id of the folder in which write
+ * 
+ * 
  * Will need an improvement to deal only with file's Id 
  * to avoid problem with likewise named files (possible with google)
  * 
@@ -11,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List; 
+import java.util.List;
+import java.util.Scanner;
+
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.FileContent;
@@ -25,6 +30,27 @@ public class CloudGoogleDrive extends Cloud {
 	public CloudGoogleDrive() throws IOException 
 	{
 		GoogleDriveUtils.getDriveService();
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("\nWhat's the folder in which you would write ? \n"
+				+ "Inquire the full path to this folders  /../../../../\n");
+		
+		String str = sc.nextLine();
+		
+		if (str.contentEquals("")) 
+		{
+			
+		}
+		else if(str.matches("^/?([a-zA-Z_0-9]+/)+$"))	//if match a folder path 
+		{
+			getFolderByName(str);
+		}
+		else
+		{
+			
+		}
+		
+		
 	}
 	
     private File _createFile(String googleFolderIdParent, String contentType, //
@@ -81,6 +107,14 @@ public class CloudGoogleDrive extends Cloud {
 
 	    // Send the request to the API.
 	    drive.files().update(fileId, file, mediaContent).execute();
+    }
+    
+    // com.google.api.services.drive.model.File
+    public File getFolderByName()
+    {
+    	File f;
+    	
+    	return f;
     }
     
     // com.google.api.services.drive.model.File

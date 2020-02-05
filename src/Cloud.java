@@ -6,7 +6,7 @@ public abstract class Cloud {
 
 	protected InetAddress ipAddress;
 	protected String url;		//Generic URL to reach the cloud, like www.example.com 
-	protected String path;			//with eventually the directory in which write
+	protected String folder;			//with eventually the directory in which write
 
 	protected String username;
 	protected String password;
@@ -28,12 +28,12 @@ public abstract class Cloud {
 		this.url = url;
 	}
 
-	public String getPath() {
-		return path;
+	public String getFolder() {
+		return folder;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setFolder(String folder) {
+		this.folder = folder;
 	}
 
 	public String getUsername() {
