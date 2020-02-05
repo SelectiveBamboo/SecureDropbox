@@ -14,23 +14,32 @@ public class SimpleCloud extends Cloud {
 	
 	//TODO 
 	//Something with all these constructors !!!!
-	public SimpleCloud(String url) 
+	
+	/*
+	public SimpleCloud(String url) throws IOException 
 	{
 		this(url, null, null, null);
 	}
 	
-	public SimpleCloud(InetAddress ipAddress) 
+	public SimpleCloud(InetAddress ipAddress) throws IOException 
 	{
 		this(null, ipAddress, null, null);
 	}
-	
-	public SimpleCloud(String url, InetAddress ipAddress, String username, String password ) 
+	*/
+	public SimpleCloud(String url, InetAddress ipAddress, String username, String password ) throws IOException 
 	{
 			this.ipAddress = ipAddress;
 			this.url = url;
 
 			this.username = username;
 			this.password = password;
+			
+			list(1);
+			
+			File f = new File("connectionTest");
+			putFile("connectionTest", f.getAbsolutePath());
+			deleteFile("connectionTest");
+			
 	}
 	
 	public void putFile(String nameOnCloud, String localFilePath) throws IOException 

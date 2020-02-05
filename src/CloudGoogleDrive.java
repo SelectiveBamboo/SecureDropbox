@@ -22,6 +22,11 @@ import com.google.api.services.drive.model.FileList;
 
 public class CloudGoogleDrive extends Cloud {
 	
+	public CloudGoogleDrive() throws IOException 
+	{
+		GoogleDriveUtils.getDriveService();
+	}
+	
     private File _createFile(String googleFolderIdParent, String contentType, //
             String customFileName, AbstractInputStreamContent uploadStreamContent) throws IOException 
     {
@@ -165,7 +170,7 @@ public class CloudGoogleDrive extends Cloud {
  
     
     // com.google.api.services.drive.model.File
-    public List<File> getRootFolders() throws IOException 
+    public List<File> getRootFolder() throws IOException 
     {
         return getSubFolders(null);
     }
@@ -191,30 +196,23 @@ public class CloudGoogleDrive extends Cloud {
 		return file;
     }
     
-    public void putFile(String nameOnCloud, String localFilePath) 
-    {
-    	
-    	
-    	try (java.io.InputStream fis = new java.io.FileInputStream(new java.io.File(localFilePath)))
+    public void putFile(String nameOnCloud, String localFilePath) throws IOException 
+    { 	
+    	java.io.InputStream fis = new java.io.FileInputStream(new java.io.File(localFilePath));
+
+    	Drive drive = GoogleDriveUtils.getDriveService();
+    	String fileId = getFileByExactName(nameOnCloud).getId();
+
+    	if (fileId != null) 
     	{
-    		Drive drive = GoogleDriveUtils.getDriveService();
-			String fileId = getFileByExactName(nameOnCloud).getId();
-			
-			if (fileId != null) 
-			{
-				updateFile(drive, fileId, nameOnCloud);
-			}
-			else
-			{
-				createFile(path, "text/plain", nameOnCloud, fis);
-			}
-			
-		} 
-    	catch (IOException e) 
+    		updateFile(drive, fileId, nameOnCloud);
+    	}
+    	else
     	{
-			e.printStackTrace();
-		}
-    	
+    		createFile(path, "text/plain", nameOnCloud, fis);
+    	}
+			
+    	fis.close();  	
     }
     
     
