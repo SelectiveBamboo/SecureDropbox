@@ -27,33 +27,24 @@ import com.google.api.services.drive.model.FileList;
 
 public class CloudGoogleDrive extends Cloud {
 	
-	public CloudGoogleDrive() throws IOException 
+	public CloudGoogleDrive(String folder) throws Exception, IOException, FolderNameNotFoundException
 	{
-		boolean isFolderInquired = false;
-		GoogleDriveUtils.getDriveService();
+		GoogleDriveUtils.getDriveService();		
 		
-		Scanner sc = new Scanner(System.in);
-		
-		while ( !isFolderInquired ) 
-		{
-			System.out.println("\nWhat's the folder in which you would write ? \n"
-					+ "Inquire the full path to this folders  /../../../../\n");
-			
-			String str = sc.nextLine();
-			
-			if (str.contentEquals("")) 
+			if (folder.contentEquals("")) 
 			{
-				folder = getRootFolder().get(0).getId();
-				isFolderInquired = true;
+				folder = getRootFolder().get(0).getId();	//Google drive does not deal with names but IDs, so getting the Id
 			}
-			else if(str.matches("^/?([a-zA-Z_0-9]+/)+$"))	//if match a folder path 
+			else if(folder.matches("^/?([a-zA-Z_0-9]+/)+$"))	//if match a folder path 
 			{
-				folder = getFolderByName(str).getId();
-				isFolderInquired = true;
+				folder = getFolderByName(folder).getId();	//Google drive does not deal with names but IDs, so getting the Id
 			}
-		}
-		
+			else 
+			{
+				throw new Exception();
+			}
 	}
+
 	
     private File _createFile(String googleFolderIdParent, String contentType, //
             String customFileName, AbstractInputStreamContent uploadStreamContent) throws IOException 
@@ -101,7 +92,7 @@ public class CloudGoogleDrive extends Cloud {
     }
  
     
-    public void updateFile(Drive drive, String fileId, String nameOnCloud) throws IOException 
+    private void updateFile(Drive drive, String fileId, String nameOnCloud) throws IOException 
     {
     	File file = drive.files().get(fileId).execute();
 		java.io.File fileContent = new java.io.File(nameOnCloud);
@@ -119,7 +110,8 @@ public class CloudGoogleDrive extends Cloud {
         String pageToken = null;
         List<File> list = new ArrayList<File>();
  
-        String query = " name contains '" + fileNameLike + "' " //
+        String query = " name contains '" + fileNameLike + "' " + " and '"
+        		+ folder + "' in parents" //
                 + " and mimeType != 'application/vnd.google-apps.folder' ";
  
         do {
@@ -275,7 +267,7 @@ public class CloudGoogleDrive extends Cloud {
     	}
     	else
     	{
-    		createFile(path, "text/plain", nameOnCloud, fis);
+    		createFile(folder, "text/plain", nameOnCloud, fis);
     	}
 			
     	fis.close();  	

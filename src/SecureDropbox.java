@@ -12,6 +12,8 @@ public class SecureDropbox {
 	
 	private static final String VERSION = "1.0";
 	
+	private static String regexFolder = "^/?([a-zA-Z_0-9]+/)+$";
+	
 	static List<Cloud> clouds;
 	
 	static String path;
@@ -140,8 +142,28 @@ public class SecureDropbox {
 	
 	private static void initializeCloudGoogle(Scanner sc)
 	{
+		String folder = null;
+		
+		boolean isFolderInquired =false;
+		while ( !isFolderInquired ) 
+		{
+			System.out.println("\nWhat's the folder in which you would write ? \n"
+					+ "Inquire the full path to this folder in linux style:   /../../../../\n");
+			
+			folder = sc.nextLine();
+			
+			if (folder.contentEquals("")) 
+			{
+				isFolderInquired = true;
+			}
+			else if(folder.matches(regexFolder))	//if match a folder path (linux like)
+			{
+				isFolderInquired = true;		
+			}
+		}
+		
 		try {
-			CloudGoogleDrive cloud = new CloudGoogleDrive();
+			CloudGoogleDrive cloud = new CloudGoogleDrive(folder);
 			clouds.add(cloud);
 		} 
 		catch (IOException e) 
@@ -149,7 +171,18 @@ public class SecureDropbox {
 			e.printStackTrace();
 			System.err.println("ERROR: when adding the cloud, operation aborted");
 			System.exit(1);
+		} 
+		catch (FolderNameNotFoundException e) 
+		{
+			System.err.println("ERROR: folder name not found on the server, be sure it exists or create it");
+			initializeCloudGoogle(sc);
 		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
 		System.out.println("Cloud added !");
 	}
 	
@@ -181,6 +214,14 @@ public class SecureDropbox {
 			url = null;
 		}
 		
+		String folder = null;
+		System.out.print("\n\nFolder or path in which write in the cloud (press enter if none): ");
+		String temp = sc.nextLine();
+		if (temp.equals("") || temp.matches(regexFolder)) 
+		{
+			folder = temp;
+		}
+		
 		System.out.print("\n\nUsername to acces the cloud (press enter if none): ");
 		String username = sc.nextLine();
 		if (username.equals("")) 
@@ -196,7 +237,7 @@ public class SecureDropbox {
 		}
 		
 		try {
-			SimpleCloud cloud = new SimpleCloud(url, ipAddress, username, password);
+			SimpleCloud cloud = new SimpleCloud(url, ipAddress, username, password, folder);
 			clouds.add(cloud);
 		} 
 		catch (IOException e) 

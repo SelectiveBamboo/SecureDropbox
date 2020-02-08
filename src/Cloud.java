@@ -52,6 +52,4 @@ public abstract class Cloud {
 		this.password = password;
 	}
 	
-	
-	
 }
