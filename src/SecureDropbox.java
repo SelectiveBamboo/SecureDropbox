@@ -181,14 +181,14 @@ public class SecureDropbox {
 			url = null;
 		}
 		
-		System.out.print("\n\nUsername to acces the cloud (press enter if none): ");
+		System.out.print("\n\nUsername to access the cloud (press enter if none): ");
 		String username = sc.nextLine();
 		if (username.equals("")) 
 		{
 			username = null;
 		}
 		
-		System.out.print("\n\nPassword to acces the cloud (press enter if none): ");
+		System.out.print("\n\nPassword to access the cloud (press enter if none): ");
 		String password = sc.nextLine();
 		if (password.equals("")) 
 		{

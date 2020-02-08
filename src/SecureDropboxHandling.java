@@ -26,19 +26,26 @@ public class SecureDropboxHandling extends Thread {
 	}
 	
 	
-	public void run()	//TODO How to throw exceptions ? Overwrite run method ?
+	public void run()
 	{
 		if (actionOnFile.equals("deleted"))
 		{
 			for (Cloud aCloud : clouds) 
 			{
-				if (aCloud instanceof CloudGoogleDrive) 
-				{
-					((CloudGoogleDrive) aCloud).deleteFile(nameOfFile);
+				try {
+					if (aCloud instanceof CloudGoogleDrive) 
+					{
+						((CloudGoogleDrive) aCloud).deleteFile(nameOfFile);
+					}
+					else if (aCloud instanceof SimpleCloud) 
+					{
+						((SimpleCloud) aCloud).deleteFile(nameOfFile);
+					}
 				}
-				else if (aCloud instanceof SimpleCloud) 
+				catch(IOException ioe)
 				{
-					((SimpleCloud) aCloud).deleteFile(nameOfFile);
+					ioe.printStackTrace();
+					System.err.println("ERROR: while deleting files on cloud");
 				}
 			}
 		}
@@ -72,9 +79,10 @@ public class SecureDropboxHandling extends Thread {
 					bits = BitSet.valueOf(new BigInteger(text.getBytes()).toByteArray());
 				}
 			} 
-			catch (IOException ex) 
+			catch (IOException ioe) 
 			{
-				ex.printStackTrace();
+				ioe.printStackTrace();
+				System.err.println("ERROR: while deleting files on cloud");
 			}
 		
 			DataSplitting splittedDatas = new DataSplitting(clouds.size()-1, bits);
