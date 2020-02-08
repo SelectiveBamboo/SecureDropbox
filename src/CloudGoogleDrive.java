@@ -1,4 +1,7 @@
 /*
+ * Path in CloudGoogleDrive is actualy the Id of the folder in which write
+ * 
+ * 
  * Will need an improvement to deal only with file's Id 
  * to avoid problem with likewise named files (possible with google)
  * 
@@ -11,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List; 
+import java.util.List;
+import java.util.Scanner;
+
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.FileContent;
@@ -22,10 +27,24 @@ import com.google.api.services.drive.model.FileList;
 
 public class CloudGoogleDrive extends Cloud {
 	
-	public CloudGoogleDrive() throws IOException 
+	public CloudGoogleDrive(String folder) throws Exception, IOException, FolderNameNotFoundException
 	{
-		GoogleDriveUtils.getDriveService();
+		GoogleDriveUtils.getDriveService();		
+		
+			if (folder.contentEquals("")) 
+			{
+				folder = getRootFolder().get(0).getId();	//Google drive does not deal with names but IDs, so getting the Id
+			}
+			else if(folder.matches("^/?([a-zA-Z_0-9]+/)+$"))	//if match a folder path 
+			{
+				folder = getFolderByName(folder).getId();	//Google drive does not deal with names but IDs, so getting the Id
+			}
+			else 
+			{
+				throw new Exception();
+			}
 	}
+
 	
     private File _createFile(String googleFolderIdParent, String contentType, //
             String customFileName, AbstractInputStreamContent uploadStreamContent) throws IOException 
@@ -73,7 +92,7 @@ public class CloudGoogleDrive extends Cloud {
     }
  
     
-    public void updateFile(Drive drive, String fileId, String nameOnCloud) throws IOException 
+    private void updateFile(Drive drive, String fileId, String nameOnCloud) throws IOException 
     {
     	File file = drive.files().get(fileId).execute();
 		java.io.File fileContent = new java.io.File(nameOnCloud);
@@ -91,7 +110,8 @@ public class CloudGoogleDrive extends Cloud {
         String pageToken = null;
         List<File> list = new ArrayList<File>();
  
-        String query = " name contains '" + fileNameLike + "' " //
+        String query = " name contains '" + fileNameLike + "' " + " and '"
+        		+ folder + "' in parents" //
                 + " and mimeType != 'application/vnd.google-apps.folder' ";
  
         do {
@@ -130,6 +150,44 @@ public class CloudGoogleDrive extends Cloud {
     	return file;
     }
     
+    // com.google.api.services.drive.model.File
+    public File getFolderByName(String path) throws FolderNameNotFoundException
+    {
+    	File f = null;
+    	
+    	try {
+    		List<File> foldersReturned;
+    		f = getRootFolder().get(0);
+
+    		String[] subfolders = path.split("/");
+
+    		for (int i = 0; i < subfolders.length; i++) 
+    		{
+    			foldersReturned = getSubFolders(f.getId());
+
+    			int j = 0;
+    			while ( !foldersReturned.get(j).getName().equals(subfolders[i]) && j<foldersReturned.size() ) 
+    			{
+    				j++;
+    			}
+
+    			if ( j<foldersReturned.size() ) 
+    			{
+    				f = foldersReturned.get(j);
+    			}
+    			else
+    			{
+    				throw new FolderNameNotFoundException(subfolders[i], path);
+    			}
+    		}
+    	}
+    	catch (IOException ioe)
+    	{
+    		ioe.printStackTrace();
+    	}
+    	
+    	return f;
+    }
     
     public List<File> getSubFolders(String googleFolderIdParent) throws IOException 
     {
@@ -209,7 +267,7 @@ public class CloudGoogleDrive extends Cloud {
     	}
     	else
     	{
-    		createFile(path, "text/plain", nameOnCloud, fis);
+    		createFile(folder, "text/plain", nameOnCloud, fis);
     	}
 			
     	fis.close();  	

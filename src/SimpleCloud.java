@@ -26,10 +26,11 @@ public class SimpleCloud extends Cloud {
 		this(null, ipAddress, null, null);
 	}
 	*/
-	public SimpleCloud(String url, InetAddress ipAddress, String username, String password ) throws IOException 
+	public SimpleCloud(String url, InetAddress ipAddress, String username, String password, String folder ) throws IOException 
 	{
 			this.ipAddress = ipAddress;
 			this.url = url;
+			this.folder = folder;
 
 			this.username = username;
 			this.password = password;
@@ -47,14 +48,14 @@ public class SimpleCloud extends Cloud {
 		Sardine sardine = SardineFactory.begin(username, password);
 		
 		InputStream	fis = new FileInputStream(new File(localFilePath));
-		sardine.put(url+nameOnCloud, fis);		
+		sardine.put(url+folder+nameOnCloud, fis);		
 	}
 	
 	
 	public void deleteFile(String fileName) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);		
-		sardine.delete(url+fileName);
+		sardine.delete(url+folder+fileName);
 	}
 	
 	
@@ -64,7 +65,7 @@ public class SimpleCloud extends Cloud {
 		
 		Sardine sardine = SardineFactory.begin(username, password);
 		try {
-			doesExist = sardine.exists(url+fileName);
+			doesExist = sardine.exists(url+folder+fileName);
 		} 
 		catch (IOException e) 
 		{
@@ -75,30 +76,15 @@ public class SimpleCloud extends Cloud {
 	}
 
 	
-	public File getFile(String fileName) throws IOException, Exception
+	public File getFile(String fileName) throws IOException
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
-		InputStream is = null;
-		File file;
+		InputStream is = sardine.get(url+folder+fileName);
+		File file = new File(fileName);
 		
-		if (path != null) 
-		{
-			is = sardine.get(url+path+fileName);
-		}
-		else
-		{
-			is = sardine.get(url+fileName);
-		}
-		
-		if (is == null) 
-		{
-			throw new Exception();
-		}
-		
-		file = new File(fileName);
 		OutputStream fos = new FileOutputStream(file);
 
-		byte[] buffer = new byte[8 * 1024];
+		byte[] buffer = new byte[1024];
 		int bytesRead;
 		
 		while ((bytesRead = is.read(buffer)) != -1) 
