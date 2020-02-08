@@ -229,7 +229,7 @@ public class SecureDropbox {
 			username = null;
 		}
 		
-		System.out.print("\n\nPassword to acces the cloud (press enter if none): ");
+		System.out.print("\n\nPassword to access the cloud (press enter if none): ");
 		String password = sc.nextLine();
 		if (password.equals("")) 
 		{
