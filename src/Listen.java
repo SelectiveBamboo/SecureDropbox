@@ -7,8 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Listen {
+	
     private static Map<WatchKey, Path> keyPathMap = new HashMap<>();
-    	
+    
+    String pathToFile;
+    String nameOfFile;
+    String actionOnFile;
+    
+   
     /////MAIN
     public static void main (String[] args) throws Exception 
     {
@@ -33,6 +39,7 @@ public class Listen {
         
 
         System.out.println("registering: " + path);
+        
 
         WatchKey key = path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY,
