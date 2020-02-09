@@ -36,7 +36,7 @@ public class Listen {
         }
         
 
-        System.out.println("registering: " + path);
+        //System.out.println("registering: " + path);
         
         this.pathOfFile=path.toString();
 
@@ -59,8 +59,8 @@ public class Listen {
             WatchKey queuedKey = watchService.take();
             for (WatchEvent<?> watchEvent : queuedKey.pollEvents()) 
             {
-                System.out.printf("Event... pathkind=%s, count=%d, context=%s \n",
-                		watchEvent.kind(),watchEvent.count(), watchEvent.context());
+                //System.out.printf("Event... pathkind=%s, count=%d, context=%s \n",
+                		//watchEvent.kind(),watchEvent.count(), watchEvent.context());
                 
                 //System.out.printf("Path: ");
                 //System.out.printf("Type=%s",watchEvent.kind());
