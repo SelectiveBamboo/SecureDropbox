@@ -55,6 +55,7 @@ public class Parity
 	public BitSet getBs() 
 	{
 		return hash2.get(hashmap_size);
+		return hash2;
 	}
 	
 
