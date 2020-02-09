@@ -1,4 +1,5 @@
 
+
 import java.io.File;
 
 import java.io.IOException;
@@ -9,14 +10,12 @@ import java.util.Map;
 public class Listen {
 	
     private static Map<WatchKey, Path> keyPathMap = new HashMap<>();
-    
-    String pathToFile;
-    String nameOfFile;
-    String actionOnFile;
-    
-   
+    public String nameOfFile;
+    public String pathOfFile;
+    public String actionOnFile;
+    	
     /////MAIN
-    public static void main (String[] args) throws Exception 
+    public  void main (String[] args) throws Exception 
     {
     	
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) 
@@ -27,9 +26,8 @@ public class Listen {
     }
     
 
-    private static void registerDir (Path path, WatchService watchService) throws IOException 
+    private void registerDir (Path path, WatchService watchService) throws IOException 
     {
-
     	
         if (!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) 
         {
@@ -40,6 +38,7 @@ public class Listen {
 
         System.out.println("registering: " + path);
         
+        this.pathOfFile=path.toString();
 
         WatchKey key = path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY,
@@ -53,7 +52,7 @@ public class Listen {
         }
     }
 
-    private static void startListening (WatchService watchService) throws Exception 
+    private void startListening (WatchService watchService) throws Exception 
     {
         while (true) 
         {
@@ -77,6 +76,9 @@ public class Listen {
                     path = parentPath.resolve(path);
 
                     registerDir(path, watchService);
+                    
+                    this.nameOfFile=watchEvent.context().toString();
+                    this.actionOnFile=watchEvent.kind().toString();
                 }
                 
                 //notification modify
@@ -91,6 +93,10 @@ public class Listen {
                     path = parentPath.resolve(path);
 
                     registerDir(path, watchService);
+                    
+                    this.nameOfFile=watchEvent.context().toString();
+                    this.actionOnFile=watchEvent.kind().toString();
+                   
                 }
                 
                 //notification delete
@@ -105,6 +111,9 @@ public class Listen {
                     path = parentPath.resolve(path);
 
                     registerDir(path, watchService);
+                    
+                    this.nameOfFile=watchEvent.context().toString();
+                    this.actionOnFile=watchEvent.kind().toString();
                 }
             }
             
@@ -118,4 +127,21 @@ public class Listen {
             }
         }
     }
+
+
+	public String getNameOfFile() {
+		return nameOfFile;
+	}
+
+
+	public String getPathOfFile() {
+		return pathOfFile;
+	}
+
+
+	public String getActionOnFile() {
+		return actionOnFile;
+	}
+
+
 }
