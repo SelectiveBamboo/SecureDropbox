@@ -10,9 +10,9 @@ import java.util.Map;
 public class Listen {
 	
     private static Map<WatchKey, Path> keyPathMap = new HashMap<>();
-    public String nameOfFile;
-    public String pathOfFile;
-    public String actionOnFile;
+    public static String nameOfFile;
+    public static String pathOfFile;
+    public static String actionOnFile;
     	
     /////MAIN
     public  void main (String[] args) throws Exception 
@@ -38,7 +38,7 @@ public class Listen {
 
         //System.out.println("registering: " + path);
         
-        this.pathOfFile=path.toString();
+        Listen.pathOfFile=path.toString();
 
         WatchKey key = path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY,
@@ -77,8 +77,8 @@ public class Listen {
 
                     registerDir(path, watchService);
                     
-                    this.nameOfFile=watchEvent.context().toString();
-                    this.actionOnFile=watchEvent.kind().toString();
+                    Listen.nameOfFile=watchEvent.context().toString();
+                    Listen.actionOnFile=watchEvent.kind().toString();
                 }
                 
                 //notification modify
@@ -94,8 +94,8 @@ public class Listen {
 
                     registerDir(path, watchService);
                     
-                    this.nameOfFile=watchEvent.context().toString();
-                    this.actionOnFile=watchEvent.kind().toString();
+                    Listen.nameOfFile=watchEvent.context().toString();
+                    Listen.actionOnFile=watchEvent.kind().toString();
                    
                 }
                 
@@ -112,8 +112,8 @@ public class Listen {
 
                     registerDir(path, watchService);
                     
-                    this.nameOfFile=watchEvent.context().toString();
-                    this.actionOnFile=watchEvent.kind().toString();
+                    Listen.nameOfFile=watchEvent.context().toString();
+                    Listen.actionOnFile=watchEvent.kind().toString();
                 }
             }
             
@@ -129,17 +129,17 @@ public class Listen {
     }
 
 
-	public String getNameOfFile() {
+	public static String getNameOfFile() {
 		return nameOfFile;
 	}
 
 
-	public String getPathOfFile() {
+	public static String getPathOfFile() {
 		return pathOfFile;
 	}
 
 
-	public String getActionOnFile() {
+	public static String getActionOnFile() {
 		return actionOnFile;
 	}
 
