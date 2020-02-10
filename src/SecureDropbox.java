@@ -12,9 +12,9 @@ public class SecureDropbox {
 	
 	private static final String VERSION = "1.0";
 	
-	private static String regexFolder = "^/?([a-zA-Z_0-9]+/)+$";
+	public static String regexFolder = "^/?([a-zA-Z_0-9]+/)+$";
 	
-	static List<Cloud> clouds;
+	private static List<Cloud> clouds;
 	
 	static String path;
 	static int cloudsNb = 0;
