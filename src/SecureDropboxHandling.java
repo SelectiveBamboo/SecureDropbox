@@ -12,14 +12,14 @@ public class SecureDropboxHandling extends Thread {
 
 	protected static final int BUFFER_SIZE = 1;
 	
-	private String nameOfFile;
+	private String nameOfLocalFile;
 	private String pathToFile;
 	private String actionOnFile;
 	private List<Cloud> clouds;
 	
-	public SecureDropboxHandling(String nameOfFile, String pathToFile, String actionOnFile, List<Cloud> clouds)
+	public SecureDropboxHandling(String nameOfLocalFile, String pathToFile, String actionOnFile, List<Cloud> clouds)
 	{
-		this.nameOfFile = nameOfFile;
+		this.nameOfLocalFile = nameOfLocalFile;
 		this.pathToFile = pathToFile;
 		this.actionOnFile = actionOnFile;
 		this.clouds = clouds;
@@ -35,11 +35,11 @@ public class SecureDropboxHandling extends Thread {
 				try {
 					if (aCloud instanceof CloudGoogleDrive) 
 					{
-						((CloudGoogleDrive) aCloud).deleteFile(nameOfFile);
+						((CloudGoogleDrive) aCloud).deleteFile(nameOfLocalFile);
 					}
 					else if (aCloud instanceof SimpleCloud) 
 					{
-						((SimpleCloud) aCloud).deleteFile(nameOfFile);
+						((SimpleCloud) aCloud).deleteFile(nameOfLocalFile);
 					}
 				}
 				catch(IOException ioe)
@@ -51,11 +51,11 @@ public class SecureDropboxHandling extends Thread {
 		}
 		else if (actionOnFile.equals("created") || actionOnFile.equals("modified"))
 		{
-			putFilesChangesOnCloud(nameOfFile, pathToFile, clouds);
+			putFilesChangesOnCloud(nameOfLocalFile, pathToFile, clouds);
 		}
 		else
 		{
-			System.err.println("ERROR: unrecognized action on a file:" + pathToFile + nameOfFile);
+			System.err.println("ERROR: unrecognized action on a file:" + pathToFile + nameOfLocalFile);
 			System.exit(1);
 		}
 	}
