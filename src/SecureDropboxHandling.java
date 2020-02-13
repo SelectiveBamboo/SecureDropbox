@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.List;
 
-import fr.univ.smb.iut.rt.mounierh.cloud.Listen;
 
 public class SecureDropboxHandling extends Thread {
 
@@ -21,9 +20,9 @@ public class SecureDropboxHandling extends Thread {
 	
 	public SecureDropboxHandling(String nameOfFile, String pathToFile, String actionOnFile, List<Cloud> clouds)
 	{
-		this.nameOfFile = Listen.getNameOfFile();
-		this.pathToFile = Listen.getPathOfFile();
-		this.actionOnFile = Listen.getActionOnFile();
+		this.nameOfFile = nameOfFile;
+		this.pathToFile = pathToFile;
+		this.actionOnFile = actionOnFile;
 		this.clouds = clouds;
 	}
 	
