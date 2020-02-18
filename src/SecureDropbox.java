@@ -39,8 +39,9 @@ public class SecureDropbox {
 
 	
 	
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{	
+		//String[] arg = {"--clouds", "3"}; For test purposes
 		initialization(args);
 		
 		while(true)
@@ -190,12 +191,14 @@ public class SecureDropbox {
 	{
 		System.out.print("\n\nIp address of the cloud (press enter if none): ");
 		InetAddress ipAddress = null;
+		String strIP;
+	
 		try {
-			ipAddress = InetAddress.getByAddress(sc.nextLine().getBytes());
+			strIP = sc.nextLine();
 			
-			if ( ipAddress.equals(InetAddress.getByAddress("".getBytes())) ) 
+			if (!strIP.equals("")) 
 			{
-				ipAddress = null;
+				 ipAddress = InetAddress.getByAddress(strIP.getBytes());
 			}
 		} 
 		catch (UnknownHostException e1) 

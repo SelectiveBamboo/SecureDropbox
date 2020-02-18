@@ -1,12 +1,11 @@
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.List;
+
 
 public class SecureDropboxHandling extends Thread {
 
@@ -51,7 +50,14 @@ public class SecureDropboxHandling extends Thread {
 		}
 		else if (actionOnFile.equals("created") || actionOnFile.equals("modified"))
 		{
-			putFilesChangesOnCloud(nameOfFile, pathToFile, clouds);
+			try {
+				putFilesChangesOnCloud(nameOfFile, pathToFile, clouds);
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+				System.err.println("ERROR:" + e.getMessage());
+			}
 		}
 		else
 		{
@@ -60,9 +66,9 @@ public class SecureDropboxHandling extends Thread {
 		}
 	}
 	
-	private void putFilesChangesOnCloud(String nameOfFile, String pathToFile, List<Cloud> clouds) 
+	private void putFilesChangesOnCloud(String nameOfFile, String pathToFile, List<Cloud> clouds) throws IOException 
 	{
-		BitSet bits;
+		BitSet bits = new BitSet();
 		
 		File fileIn = new File(pathToFile + nameOfFile);
 		
@@ -89,7 +95,7 @@ public class SecureDropboxHandling extends Thread {
 			
 			Parity parity = new Parity(splittedDatas.getHmap());
 			
-			SplitInFiles splitInFiles = new SplitInFiles(parity.getHmap);
+			SplitInFiles splitInFiles = new SplitInFiles(parity.getHash());
 			
 			List<File> filesToSend = splitInFiles.getGeneratedFiles();
 			
