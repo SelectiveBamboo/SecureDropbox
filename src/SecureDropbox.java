@@ -39,20 +39,18 @@ public class SecureDropbox {
 
 	
 	
-	//public static void main(String[] args) 
 	public static void main(String[] args)
 	{	
-		String[] arg = {"--clouds", "3"};
-		initialization(arg);
+		//String[] arg = {"--clouds", "3"}; For test purposes
+		initialization(args);
 		
-		//while(true)
-		//{
-			//Listen eventCaptured = new Listen(path);
+		while(true)
+		{
+			Listen eventCaptured = new Listen(path);
 			
-			//SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
-			SecureDropboxHandling newThread = new SecureDropboxHandling("toto.txt","/home/jules/Bureau/", "created", clouds);
+			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
 			newThread.start();
-		//}
+		}
 		
 	}
 
@@ -194,6 +192,7 @@ public class SecureDropbox {
 		System.out.print("\n\nIp address of the cloud (press enter if none): ");
 		InetAddress ipAddress = null;
 		String strIP;
+	
 		try {
 			strIP = sc.nextLine();
 			
