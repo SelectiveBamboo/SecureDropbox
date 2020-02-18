@@ -1,7 +1,4 @@
 
-
-
-import java.io.IOException;
 import java.util.BitSet;
 import java.util.HashMap;
 
@@ -17,7 +14,7 @@ public class Parity
 	private HashMap<Integer , BitSet> hash2 = new HashMap<Integer, BitSet>();
 
 		
-	public Parity (HashMap<Integer, BitSet> hash) throws IOException
+	public Parity (HashMap<Integer, BitSet> hash) 
 	
 	{
 		

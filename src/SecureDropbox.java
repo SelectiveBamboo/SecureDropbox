@@ -39,17 +39,20 @@ public class SecureDropbox {
 
 	
 	
-	public static void main(String[] args) 
+	//public static void main(String[] args) 
+	public static void main(String[] args)
 	{	
-		initialization(args);
+		String[] arg = {"--clouds", "3"};
+		initialization(arg);
 		
-		while(true)
-		{
-			Listen eventCaptured = new Listen(path);
+		//while(true)
+		//{
+			//Listen eventCaptured = new Listen(path);
 			
-			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
+			//SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
+			SecureDropboxHandling newThread = new SecureDropboxHandling("toto.txt","/home/jules/Bureau/", "created", clouds);
 			newThread.start();
-		}
+		//}
 		
 	}
 
@@ -190,12 +193,13 @@ public class SecureDropbox {
 	{
 		System.out.print("\n\nIp address of the cloud (press enter if none): ");
 		InetAddress ipAddress = null;
+		String strIP;
 		try {
-			ipAddress = InetAddress.getByAddress(sc.nextLine().getBytes());
+			strIP = sc.nextLine();
 			
-			if ( ipAddress.equals(InetAddress.getByAddress("".getBytes())) ) 
+			if (!strIP.equals("")) 
 			{
-				ipAddress = null;
+				 ipAddress = InetAddress.getByAddress(strIP.getBytes());
 			}
 		} 
 		catch (UnknownHostException e1) 
