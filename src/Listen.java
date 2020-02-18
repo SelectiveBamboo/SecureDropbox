@@ -15,8 +15,9 @@ public class Listen {
     public static String actionOnFile;
     	
     /////MAIN
-    public  void main (String[] args) throws Exception 
+    /*public  void main (String[] args) throws Exception 
     {
+    	
     	
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) 
         {
@@ -24,12 +25,18 @@ public class Listen {
             startListening(watchService);
         }
     }
+    */
     
 
     private void registerDir (Path path, WatchService watchService) throws IOException 
-    {
+    
+    
+   {
+    	WatchService watchService1 = FileSystems.getDefault().newWatchService();
     	
-        if (!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) 
+    	Path path1 = Paths.get("/Users/hugomounier/Desktop/divers");
+    	
+        if (!Files.isDirectory(path1, LinkOption.NOFOLLOW_LINKS)) 
         {
             return;
             
@@ -38,24 +45,24 @@ public class Listen {
 
         //System.out.println("registering: " + path);
         
-        Listen.pathOfFile=path.toString();
+        Listen.pathOfFile=path1.toString();
 
-        WatchKey key = path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
+        WatchKey key = path1.register(watchService1, StandardWatchEventKinds.ENTRY_CREATE,
                             StandardWatchEventKinds.ENTRY_MODIFY,
                             StandardWatchEventKinds.ENTRY_DELETE);
-        keyPathMap.put(key, path);
+        keyPathMap.put(key, path1);
 
 
-        for (File f : path.toFile().listFiles()) 
+        for (File f : path1.toFile().listFiles()) 
         {
-            registerDir(f.toPath(), watchService);
+            registerDir(f.toPath(), watchService1);
         }
     }
 
     private void startListening (WatchService watchService) throws Exception 
     {
-        while (true) 
-        {
+         
+        
             WatchKey queuedKey = watchService.take();
             for (WatchEvent<?> watchEvent : queuedKey.pollEvents()) 
             {
@@ -123,10 +130,10 @@ public class Listen {
             }
             if (keyPathMap.isEmpty()) 
             {
-                break;
+                return;
             }
         }
-    }
+    
 
 
 	public static String getNameOfFile() {
