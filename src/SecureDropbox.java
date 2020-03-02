@@ -1,12 +1,16 @@
 import java.io.File;
+
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.FileSystems;
+import java.nio.file.Paths;
+import java.nio.file.WatchService;
 import java.util.List;
 import java.util.Scanner;
 
-import com.google.api.services.drive.Drive;
+//import com.google.api.services.drive.Drive;
 
 public class SecureDropbox {
 	
@@ -39,15 +43,19 @@ public class SecureDropbox {
 
 	
 	
-	public static void main(String[] args) 
+	public static void main(String[] args) throws IOException 
 	{	
 		initialization(args);
 		
 		while(true)
 		{
-			Listen eventCaptured = new Listen(path);
+			WatchService watchService1 = FileSystems.getDefault().newWatchService();
 			
-			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
+			Listen eventCaptured = new Listen(Paths.get("/Users/hugomounier/Desktop/divers"), watchService1);
+		
+		
+			
+			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPathOfFile(), eventCaptured.getNameOfFile(), eventCaptured.getActionOnFile(), clouds);
 			newThread.start();
 		}
 		
