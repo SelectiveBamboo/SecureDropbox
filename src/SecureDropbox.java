@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
 
-import com.google.api.services.drive.Drive;
+//import com.google.api.services.drive.Drive;
 
 public class SecureDropbox {
 	
@@ -45,10 +45,32 @@ public class SecureDropbox {
 		
 		while(true)
 		{
-			Listen eventCaptured = new Listen(path);
+			EventListener eventCaptured;
+			try {
+				eventCaptured = new EventListener("/Users/hugomounier/Desktop/divers");
+				
+			    boolean state = eventCaptured.Listen();
+			    
+			    
+			    System.out.println(eventCaptured.getActionOnFile());
+			    System.out.println(eventCaptured.getNameOfFile());
+			    System.out.println(eventCaptured.getPathOfFile());
+
+			    
+			    if(!state) { break; }
+				
+				//SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPathOfFile(), eventCaptured.getNameOfFile(), eventCaptured.getActionOnFile(), clouds);
+			    //newThread.start();
+				
+				
+
+				
+			} catch (Exception e) {
+				System.err.println("Listen init error !");
+				e.printStackTrace();
+			}
 			
-			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getPath(), eventCaptured.getFilename(), eventCaptured.getAction(), clouds);
-			newThread.start();
+			
 		}
 		
 	}
