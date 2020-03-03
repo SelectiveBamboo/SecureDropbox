@@ -32,36 +32,33 @@ public class EventListener {
     	
     }
     
-    
-    
 
     private void registerDir (Path path, WatchService watchService) throws IOException 
     {
-    	
-        if (!Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) 
-        {
-            return;
-            
-        }
-        
 
         System.out.println("registering: " + path);
         
+        
+        
         this.pathOfFile=path.toString();
-
-        WatchKey key = path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
-                            StandardWatchEventKinds.ENTRY_MODIFY,
-                            StandardWatchEventKinds.ENTRY_DELETE);
-        keyPathMap.put(key, path);
-
-
-        for (File f : path.toFile().listFiles()) 
+        
+        
+        if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) 
         {
-            registerDir(f.toPath(), watchService);
+        	
+        	
+            WatchKey key = path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE,
+                    StandardWatchEventKinds.ENTRY_MODIFY,
+                    StandardWatchEventKinds.ENTRY_DELETE);
+            keyPathMap.put(key, path);
+        	
+        	for (File f : path.toFile().listFiles()) 
+            {
+                registerDir(f.toPath(), watchService);
+            }
         }
+        
     }
-    
-    
 
     private boolean startListening (WatchService watchService) throws Exception 
     {
@@ -92,7 +89,7 @@ public class EventListener {
                 
                 //notification modify
                 
-                if (watchEvent.kind() == StandardWatchEventKinds.ENTRY_MODIFY) 
+                if (watchEvent.kind() == StandardWatchEventKinds.ENTRY_MODIFY && !watchEvent.context().toString().equals(".DS_Store")) 
                 {
                    
                     Path path = (Path) watchEvent.context();
