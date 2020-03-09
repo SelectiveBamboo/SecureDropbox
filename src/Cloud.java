@@ -1,10 +1,7 @@
-import java.net.InetAddress;
-
-
 
 public abstract class Cloud {
 
-	protected InetAddress ipAddress;
+	protected String ipAddress;
 	protected String url;		//Generic URL to reach the cloud, like www.example.com 
 	protected String folder;			//with eventually the directory in which write
 
@@ -12,11 +9,11 @@ public abstract class Cloud {
 	protected String password;
 
 	
-	public InetAddress getIpAddress() {
+	public String getIpAddress() {
 		return ipAddress;
 	}
 
-	public void setIpAddress(InetAddress ipAddress) {
+	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
 

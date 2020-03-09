@@ -31,7 +31,7 @@ public class CloudGoogleDrive extends Cloud {
 	{
 		GoogleDriveUtils.getDriveService();		
 		
-			if (folder.contentEquals("")) 
+			if (folder.equals("")) 
 			{
 				folder = getRootFolder().get(0).getId();	//Google drive does not deal with names but IDs, so getting the Id
 			}

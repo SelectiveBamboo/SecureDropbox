@@ -27,7 +27,7 @@ public class SecureDropboxHandling extends Thread {
 	
 	public void run()
 	{
-		if (actionOnFile.equals("deleted"))
+		if (actionOnFile.equals("ENTRY_DELETE"))
 		{
 			for (Cloud aCloud : clouds) 
 			{
@@ -48,7 +48,7 @@ public class SecureDropboxHandling extends Thread {
 				}
 			}
 		}
-		else if (actionOnFile.equals("created") || actionOnFile.equals("modified"))
+		else if (actionOnFile.equals("ENTRY_CREATE") || actionOnFile.equals("ENTRY_MODIFIY"))
 		{
 			try {
 				putFilesChangesOnCloud(nameOfFile, pathToFile, clouds);
@@ -114,5 +114,4 @@ public class SecureDropboxHandling extends Thread {
 				filesToSend.remove(0);
 			}
 	}
-
 }

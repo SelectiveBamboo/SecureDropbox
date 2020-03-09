@@ -3,9 +3,12 @@
 import java.io.File;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.sound.midi.SysexMessage;
 
 public class Listen {
 	
@@ -14,16 +17,22 @@ public class Listen {
     public  String pathOfFile;
     public  String actionOnFile;
     	
-    /////MAIN
-    public  void main (String[] args) throws Exception 
+    
+    public Listen(String path) 
     {
-    	
-        try (WatchService watchService = FileSystems.getDefault().newWatchService()) 
+        	
+    	try (WatchService watchService = FileSystems.getDefault().newWatchService()) 
         {
-            registerDir(Paths.get("/Users/hugomounier/Desktop/divers"), watchService);
+            registerDir(Paths.get(path), watchService);
             startListening(watchService);
         }
-    }
+    	catch (Exception e) 
+    	{
+			e.printStackTrace();
+			System.exit(1);
+		}
+    	
+	}
     
 
     private void registerDir (Path path, WatchService watchService) throws IOException 
@@ -54,8 +63,8 @@ public class Listen {
 
     private void startListening (WatchService watchService) throws Exception 
     {
-        while (true) 
-        {
+       // while (true) 
+        //{
             WatchKey queuedKey = watchService.take();
             for (WatchEvent<?> watchEvent : queuedKey.pollEvents()) 
             {
@@ -115,7 +124,7 @@ public class Listen {
                     this.nameOfFile=watchEvent.context().toString();
                     this.actionOnFile=watchEvent.kind().toString();
                 }
-            }
+        //    }
             
             if (!queuedKey.reset()) 
             {

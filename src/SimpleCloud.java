@@ -4,7 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.sardine.*;
@@ -26,7 +26,7 @@ public class SimpleCloud extends Cloud {
 		this(null, ipAddress, null, null);
 	}
 	*/
-	public SimpleCloud(String url, InetAddress ipAddress, String username, String password, String folder ) throws IOException 
+	public SimpleCloud(String url, String ipAddress, String username, String password, String folder ) throws IOException 
 	{
 			this.ipAddress = ipAddress;
 			this.url = url;
@@ -35,11 +35,26 @@ public class SimpleCloud extends Cloud {
 			this.username = username;
 			this.password = password;
 			
-			list(1);
+			if (this.url == null) 
+			{
+				
+				this.url = "http://"+ipAddress+"/remote.php/dav/files/";
+			}
+			
+			if (this.username != null)
+			{
+				this.url+=username+"/";
+			}
+			
+			System.out.println(this.url);
+			
+			System.out.println(list(1));
 			
 			File f = new File("connectionTest");
+			f.createNewFile();
 			putFile("connectionTest", f.getAbsolutePath());
 			deleteFile("connectionTest");
+			f.delete();
 			
 	}
 	
@@ -48,6 +63,10 @@ public class SimpleCloud extends Cloud {
 		Sardine sardine = SardineFactory.begin(username, password);
 		
 		InputStream	fis = new FileInputStream(new File(localFilePath));
+		
+		System.out.println(url+folder+nameOnCloud);
+		System.out.println(url);
+		
 		sardine.put(url+folder+nameOnCloud, fis);		
 	}
 	
@@ -102,7 +121,10 @@ public class SimpleCloud extends Cloud {
 	public List<DavResource> list(int depth) throws IOException 
 	{
 		Sardine sardine = SardineFactory.begin(username, password);
-		List<DavResource> resources = sardine.list(url, depth);
+		
+		List<DavResource> resources = new ArrayList<DavResource>();
+		
+		resources = sardine.list(url, depth);
 
 		return resources;
 	}	
