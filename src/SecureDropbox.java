@@ -65,7 +65,6 @@ public class SecureDropbox {
 	}
 
 	
-	
 	private static void initialization(String[] args) 
 	{		
 	

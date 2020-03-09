@@ -80,7 +80,7 @@ public class SecureDropboxHandling extends Thread {
 				while (inputStream.read(buffer) != -1) {
 					
 					text += new String(buffer);
-					System.out.println("File content: "+text);
+					//System.out.println("File content: "+text);
 
 					bits = BitSet.valueOf(new BigInteger(text.getBytes()).toByteArray());
 				}
@@ -88,7 +88,9 @@ public class SecureDropboxHandling extends Thread {
 			catch (IOException ioe) 
 			{
 				ioe.printStackTrace();
-				System.err.println("ERROR: while deleting files on cloud");
+				System.err.println("ERROR: while putting file changes on cloud");
+				
+				return;
 			}
 		
 			DataSplitting splittedDatas = new DataSplitting(clouds.size()-1, bits);
