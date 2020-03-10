@@ -12,7 +12,7 @@ public class Split {
 
 	public Split(HashMap<Integer, BitSet> map) throws IOException {
 		hashmap_size = map.size();
-
+		System.out.println(map);
 		for (HashMap.Entry<Integer, BitSet> entry : map.entrySet()) {
 			key = entry.getKey() ; 
 			tab = map.get(key);
@@ -20,7 +20,7 @@ public class Split {
 		}
 
 
-		for (int i = 0; i < hashmap_size; i++)
+		for (int i = 0; i < tab_length; i++)
 		// Create a new hashmap with the specified number
 		{
 			new_map.put(i, new BitSet());
@@ -46,10 +46,10 @@ public class Split {
 						+ ", taille hashmap = " + hashmap_size + ", place attribuée : " + bytes + "\n");
 
 				if (tab.get(j) == true) {
-					new_map.get(k).set(k, true);
+					new_map.get(j).set(k, true);
 
 				} else {
-					new_map.get(k).set(k, false);
+					new_map.get(j).set(k, false);
 
 				}
 
@@ -58,6 +58,9 @@ public class Split {
 			b++;
 
 		}
+		System.out.println(map);
+
+		System.out.println("s" + new_map);
 
 	}
 
