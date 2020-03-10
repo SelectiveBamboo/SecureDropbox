@@ -30,14 +30,14 @@ public class SimpleCloud extends Cloud {
 	{
 			this.ipAddress = ipAddress;
 			this.url = url;
-			this.folder = folder;
+			
+			this.folder = (folder == null) ? "" : folder;
 
 			this.username = username;
 			this.password = password;
 			
 			if (this.url == null) 
 			{
-				
 				this.url = "http://"+ipAddress+"/remote.php/dav/files/";
 			}
 			

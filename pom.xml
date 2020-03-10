@@ -11,6 +11,14 @@
 		<version>v3-rev105-1.23.0</version>
 	</dependency>
 
+		<!-- https://mvnrepository.com/artifact/net.contentobjects.jnotify/jnotify -->
+	<dependency>
+	    <groupId>net.contentobjects.jnotify</groupId>
+	    <artifactId>jnotify</artifactId>
+	    <version>0.94</version>
+	</dependency>
+	
+
 	<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
 	<dependency>
 		<groupId>com.google.api-client</groupId>

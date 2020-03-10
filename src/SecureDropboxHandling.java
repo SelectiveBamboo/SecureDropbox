@@ -19,11 +19,11 @@ public class SecureDropboxHandling extends Thread {
 	public SecureDropboxHandling(String nameOfFile, String pathToFile, String actionOnFile, List<Cloud> clouds)
 	{
 		this.nameOfFile = nameOfFile;
-		this.pathToFile = pathToFile;
+		this.pathToFile = pathToFile.substring(0, pathToFile.length() - nameOfFile.length());
 		this.actionOnFile = actionOnFile;
 		this.clouds = clouds;
+		
 	}
-	
 	
 	public void run()
 	{
@@ -48,7 +48,7 @@ public class SecureDropboxHandling extends Thread {
 				}
 			}
 		}
-		else if (actionOnFile.equals("ENTRY_CREATE") || actionOnFile.equals("ENTRY_MODIFIY"))
+		else if (actionOnFile.equals("ENTRY_CREATE") || actionOnFile.equals("ENTRY_MODIFY"))
 		{
 			try {
 				putFilesChangesOnCloud(nameOfFile, pathToFile, clouds);
@@ -84,6 +84,7 @@ public class SecureDropboxHandling extends Thread {
 
 					bits = BitSet.valueOf(new BigInteger(text.getBytes()).toByteArray());
 				}
+				System.out.println("Text as read:\n"+text);
 			} 
 			catch (IOException ioe) 
 			{
@@ -97,7 +98,11 @@ public class SecureDropboxHandling extends Thread {
 			
 			Parity parity = new Parity(splittedDatas.getHmap());
 			
+			System.out.println("parity" + parity.getHash().get(1));
+			
 			SplitInFiles splitInFiles = new SplitInFiles(parity.getHash());
+			
+			System.out.println("splitInFiles" + splitInFiles.getGeneratedFiles().get(0).length());
 			
 			List<File> filesToSend = splitInFiles.getGeneratedFiles();
 			
@@ -113,7 +118,7 @@ public class SecureDropboxHandling extends Thread {
 				}
 				
 				filesToSend.get(0).delete();
-				filesToSend.remove(0);
+				filesToSend.remove(0);		
 			}
 	}
 }

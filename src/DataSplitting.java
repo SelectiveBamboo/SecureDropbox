@@ -51,6 +51,9 @@ public class DataSplitting {
 		return hmap;
 	}
 
+	
+	
+	
     public static void main(String args[]) {
         BitSet bits1 = new BitSet();
         Random rand = new Random();
@@ -75,6 +78,5 @@ public class DataSplitting {
 		
 		bits1.set(i, false);
 		System.out.println(reformatedData.getReassembledBitArray().equals(bits1));
-		
     }
 }

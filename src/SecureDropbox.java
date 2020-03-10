@@ -47,7 +47,7 @@ public class SecureDropbox {
 				+ "\n"
 				+ "    --path PATH : PATH to the directory which will be listened \n"
 				+ "    --clouds N    : number of clouds you plan to use to replicate your datas. Must be at least 3.\n"
-				+ "    --config FILE : path to the ocnfiguration file. Default: "+config_file+"\n"
+				+ "    --config FILE : path to the configuration file. Default: "+config_file+"\n"
 				+ "\n"
 				+ "\n"
 				+ "    --help      : display help.\n"
@@ -63,18 +63,30 @@ public class SecureDropbox {
 		String[] arg = {"--clouds", "3", "--path", "/home/jules/notes"}; //For test purposes
 		initialization(arg);
 		
+		EventListener eventCaptured;
+		
 		while(true)
 		{
-			Listen eventCaptured = new Listen("/home/jules/notes");
-					
-			System.out.println(eventCaptured.getPathOfFile());
-			System.out.println(eventCaptured.getNameOfFile());
-			System.out.println(eventCaptured.getActionOnFile());
-			
-			SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getNameOfFile(), eventCaptured.getPathOfFile()+"/", eventCaptured.getActionOnFile(), clouds);
-			newThread.start();
+			try {
+				eventCaptured = new EventListener(path);
+				
+			    boolean state = eventCaptured.Listen();
+			    			    
+			    System.out.println(eventCaptured.getActionOnFile());
+			    System.out.println(eventCaptured.getNameOfFile());
+			    System.out.println(eventCaptured.getPathOfFile());
+		    
+			    if(!state) { break; }
+				
+				SecureDropboxHandling newThread = new SecureDropboxHandling(eventCaptured.getNameOfFile(), eventCaptured.getPathOfFile(), eventCaptured.getActionOnFile(), clouds);
+			    newThread.start();
+			} 
+			catch (Exception e) 
+			{
+				System.err.println("Listen init error");
+				e.printStackTrace();
+			}
 		}
-		
 	}
 
 	

@@ -12,13 +12,20 @@ import java.util.List;
 public class SplitInFiles {
 	
 	private HashMap<Integer, BitSet> new_map = new HashMap<Integer, BitSet>();
-	private int hashmap_size, key, k, i, j;
+	private int hashmap_size, key, k, i, j, tab_length;
 	private BitSet tab;
 	private List<File> generatedFiles = new ArrayList<File>();
 
 	public SplitInFiles(HashMap<Integer, BitSet> map) throws IOException 
 	{
 		hashmap_size = map.size();
+		
+		for(HashMap.Entry<Integer, BitSet> entry : map.entrySet())
+		{
+			key = entry.getKey();
+			tab = map.get(key);
+			tab_length = tab.length();
+		}
 
 		for (int i = 0; i < hashmap_size; i++)
 		// Create a new hashmap with the same size as the one in parameter
@@ -26,7 +33,7 @@ public class SplitInFiles {
 			new_map.put(i, new BitSet());
 		}
 
-		for (j = 0; j < hashmap_size; j++) {
+		for (j = 0; j < tab_length; j++) {
 			i = 0;
 			k = 0;
 			for (HashMap.Entry<Integer, BitSet> entry : map.entrySet()) {
@@ -36,6 +43,8 @@ public class SplitInFiles {
 					i++;
 				}
 				tab = map.get(key);
+				
+				System.out.println(j);
 
 				if (tab.get(j) == true) 
 				{
@@ -72,15 +81,20 @@ public class SplitInFiles {
 			
 			File f = new File(nom2);
 			f.createNewFile();
-			generatedFiles.add(f);
 			
-			OutputStream outputstream = new FileOutputStream(f);
+			FileOutputStream outputstream = new FileOutputStream(f);
+			
+			System.out.println("map numero " + i + "\n"+ new_map.get(i));
 			
 			byte[] array = new_map.get(i).toByteArray();
+			
+			System.out.println("array ength in splitfile" + array.length);
 			outputstream.write(array);
 			outputstream.flush();
 
 			outputstream.close();
+			
+			generatedFiles.add(f);
 		}
 	}
 	
