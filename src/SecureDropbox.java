@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -9,6 +11,11 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import com.google.api.services.drive.Drive;
 
@@ -22,8 +29,12 @@ public class SecureDropbox {
 	
 	private static List<Cloud> clouds = new ArrayList<Cloud>();
 	
-	static String path;
-	static int cloudsNb = 0;
+	private static String path = "";
+	private static int cloudsNb = 0;
+	
+	private static String config_file = "./config.json";
+	
+	private static JSONArray config = new JSONArray();
 
 	public static void usage()
 	{
@@ -36,6 +47,8 @@ public class SecureDropbox {
 				+ "\n"
 				+ "    --path PATH : PATH to the directory which will be listened \n"
 				+ "    --clouds N    : number of clouds you plan to use to replicate your datas. Must be at least 3.\n"
+				+ "    --config FILE : path to the ocnfiguration file. Default: "+config_file+"\n"
+				+ "\n"
 				+ "\n"
 				+ "    --help      : display help.\n"
 			);
@@ -76,6 +89,19 @@ public class SecureDropbox {
 			
 			switch (s) 
 			{
+				case "--config":	
+					File f1 = new File(args[i+1]);
+					if (f1.exists()) 
+					{
+						config_file = new String(args[i+1]);
+					}
+					else
+					{
+						System.err.println("ERROR: configuration file '"+args[i+1]+"' not found.");
+					}
+					
+					break;
+			
 				case "--clouds":
 					try {
 						cloudsNb = Integer.parseInt(args[i+1]);
@@ -117,39 +143,137 @@ public class SecureDropbox {
 			}
 		}
 		
-		for (int i = 1; i <= cloudsNb; i++) 
+		boolean initResult = true;
+		File configFile = new File(config_file);
+		
+		if (configFile.exists()) 
 		{
-			System.out.println("Information about cloud n°" + i);
-			
-			System.out.print("What kind of cloud is it ? ");
-			System.out.println("Type :\n"
-					+ "'1' for Google Drive \n"
-					+ "'2' for Nextcloud/Owncloud");
-
-			String cloudType = sc.nextLine();	
-			
-			switch (cloudType) 
+			initResult = initializeUsingConfigfile();
+		}
+		
+		if (initResult) 
+		{
+			for (int i = 1; i <= cloudsNb; i++) 
 			{
-				case "1": //Google Drive
-					initializeCloudGoogle(sc);
-					break;
+				System.out.println("Information about cloud n°" + i);
+				
+				System.out.print("What kind of cloud is it ? ");
+				System.out.println("Type :\n"
+						+ "'1' for Google Drive \n"
+						+ "'2' for Nextcloud/Owncloud");
 
-					
-				case "2": //Nextcloud - Owncloud
-					initializeSimpleCloud(sc);
-					break;
+				String cloudType = sc.nextLine();	
+				
+				switch (cloudType) 
+				{
+					case "1": //Google Drive
+						initializeCloudGoogle(sc);
+						break;
 			
+					case "2": //Nextcloud - Owncloud
+						initializeSimpleCloud(sc);
+						break;
+				
+					default:
+						System.err.println("ERROR: Can not recognize input.");
+						i--;		
+						break;
+				}
+			}
 					
-				default:
-					System.err.println("ERROR: Can not recognize input.");
-					i--;
-					
-					break;
+			if (!configFile.exists()) 
+			{
+				try {
+					configFile.createNewFile();
+				} 
+				catch (IOException e) {e.printStackTrace();}
+			}
+			
+			FileWriter fw = null;	
+			
+			try {
+				fw = new FileWriter(configFile);
+				fw.write(config.toJSONString());
+			} 
+			catch (IOException e) { e.printStackTrace();}
+
+			finally {
+				try {
+					fw.flush();
+					fw.close();
+				} 
+				catch (IOException e) { e.printStackTrace();}
 			}
 		}
 	}
 	
-	
+	private static boolean initializeUsingConfigfile()
+	{
+		boolean bool = false;
+
+		// Read configuration file
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray config = (JSONArray) parser.parse(
+					new FileReader(config_file)
+					);
+			// We must have a minimum of three clouds defined for RAID 5
+			if (cloudsNb < 3)
+			{
+				System.err.println("ERROR: you must defined at least 3 clouds for RAID 5.");
+				bool = true;
+			}
+			else
+			{
+				for (Object o : config)
+				{
+					JSONObject cloudconfig = (JSONObject) o;
+
+					String strName = (String) cloudconfig.get("name");
+					String strType = (String) cloudconfig.get("type");
+					String strIp = (String) cloudconfig.get("ipAddress");
+					String strUrl = (String) cloudconfig.get("url");
+					String strFolder = (String) cloudconfig.get("url");
+					String strUser = (String) cloudconfig.get("username");
+					String strPwd = (String) cloudconfig.get("password");
+
+					System.out.println("Name:" + strName);
+					System.out.println("Type:" + strType);
+					System.out.println("Ip address:" + strIp);
+					System.out.println("Url:" + strUrl);
+					System.out.println("Folder:" + strFolder);
+					System.out.println("Username:" + strUser);
+					System.out.println("Password:" + strPwd);
+					System.out.println();
+
+					switch (strType) 
+					{
+					case "google": //Google Drive
+						addCloudGoogle(strFolder);
+						break;
+
+					case "nextcloud": //Nextcloud - Owncloud
+					case "owncloud":
+						addSimpleCloud(strIp, strUrl, strFolder, strUser, strPwd);
+						break;
+
+					default:
+						System.err.println("ERROR: cloud type '"+strType+"' not supported.");
+						bool = true;
+						break;
+					}
+				}
+			}
+		} 
+		catch (IOException | ParseException e) 
+		{
+			e.printStackTrace();
+			bool = true;		
+		}
+		
+		return bool;
+	}
+
 	private static void initializeCloudGoogle(Scanner sc)
 	{
 		String folder = null;
@@ -172,34 +296,11 @@ public class SecureDropbox {
 			}
 		}
 		
-		try {
-			CloudGoogleDrive cloud = new CloudGoogleDrive(folder);
-			clouds.add(cloud);
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			System.err.println("ERROR: when adding the cloud, operation aborted");
-			System.exit(1);
-		} 
-		catch (FolderNameNotFoundException e) 
-		{
-			System.err.println("ERROR: folder name not found on the server, be sure it exists or create it");
-			initializeCloudGoogle(sc);
-		}
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
-		System.out.println("Cloud added !");
-		
+		addCloudGoogle(folder);
 	}
 	
 	private static void initializeSimpleCloud(Scanner sc)
 	{
-		
 		String ipAddress = null;
 		String strIP;
 		boolean isIPInquired = false;
@@ -219,16 +320,14 @@ public class SecureDropbox {
 				isIPInquired = true;
 			}
 		}
-		
-		
+			
 		System.out.print("\n\nURL of the cloud (press enter if none): ");
 		String url = sc.nextLine();
 		if (url.equals("")) 
 		{
 			url = null;
 		}
-		
-		
+			
 		String folder = null;
 		while(folder == null)
 		{
@@ -255,6 +354,50 @@ public class SecureDropbox {
 			password = null;
 		}
 		
+		addSimpleCloud(ipAddress, url, folder, username, password);
+		
+		JSONObject obj = new JSONObject();
+		obj.put("type", "nextcloud");
+		obj.put("url", url);
+		obj.put("ipAddress", ipAddress);
+		obj.put("username", username);
+		obj.put("password", password);
+		obj.put("folder", folder);
+
+		config.add(obj);
+	}
+	
+	private static void addCloudGoogle(String folder) 
+	{
+		try {
+			CloudGoogleDrive cloud = new CloudGoogleDrive(folder);
+			clouds.add(cloud);
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			System.err.println("ERROR: when adding the cloud, operation aborted");
+			System.exit(1);
+		} 
+		catch (FolderNameNotFoundException e) 
+		{
+			System.err.println("ERROR: folder name not found on the server, be sure it exists or create it");
+			
+			Scanner sc = new Scanner(System.in);
+			initializeCloudGoogle(sc);
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
+		System.out.println("Cloud added !");
+	}
+	
+	private static void addSimpleCloud(String ipAddress, String url, String folder, String username,
+			String password)
+	{
 		if (url != null || ipAddress != null)
 		{
 			try {
@@ -272,6 +415,8 @@ public class SecureDropbox {
 		else
 		{
 			System.out.println("You can't have blank IpAddres AND blank url, another chance is given to you");
+			
+			Scanner sc = new Scanner(System.in);
 			initializeSimpleCloud(sc);
 		}
 	}
