@@ -99,12 +99,21 @@ public class SecureDropboxHandling extends Thread {
 			Parity parity = new Parity(splittedDatas.getHmap());
 			
 			System.out.println("parity" + parity.getHash().get(1));
+			System.out.println("parity" + parity.getHash().get(2));
+			System.out.println("parity" + parity.getHash().get(3));
 			
-			SplitInFiles splitInFiles = new SplitInFiles(parity.getHash());
+			//SplitInFiles splitInFiles = new SplitInFiles(parity.getHash());
 			
-			System.out.println("splitInFiles" + splitInFiles.getGeneratedFiles().get(0).length());
+			SplittingForCloud split = new SplittingForCloud(parity.getHash());
+			FichierSplit fsplit = new FichierSplit(split.getreorganisedHmap());
 			
-			List<File> filesToSend = splitInFiles.getGeneratedFiles();
+			System.out.println(split.getreorganisedHmap().get(0));
+			System.out.println(split.getreorganisedHmap().get(1));
+			System.out.println(split.getreorganisedHmap().get(2));
+
+			//System.out.println("splitInFiles" + splitInFiles.getGeneratedFiles().get(0).length());
+			
+			List<File> filesToSend = fsplit.getGeneratedFiles();
 			
 			for (Cloud aCloud : clouds) 
 			{

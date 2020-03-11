@@ -26,18 +26,24 @@ public class SplitInFiles {
 			tab = map.get(key);
 			tab_length = tab.length();
 		}
-
+		
 		for (int i = 0; i < hashmap_size; i++)
 		// Create a new hashmap with the same size as the one in parameter
 		{
 			new_map.put(i, new BitSet());
 		}
 
+		int b = -1;
 		for (j = 0; j < tab_length; j++) {
 			i = 0;
 			k = 0;
+			b++;
 			for (HashMap.Entry<Integer, BitSet> entry : map.entrySet()) {
-				key = entry.getKey() + j; // on incremente pour repartir la parit�
+				if (b > hashmap_size) 
+				{
+					b=0;
+				}
+				key = entry.getKey() + b; // on incremente pour repartir la parit�
 				if (key > hashmap_size) { // si on depasse la taille du hashmap on remet la valeur a 1
 					key = 1 + i;
 					i++;
@@ -48,11 +54,11 @@ public class SplitInFiles {
 
 				if (tab.get(j) == true) 
 				{
-					new_map.get(j).set(k, true);
+					new_map.get(k).set(k, true);
 				} 
 				else 
 				{
-					new_map.get(j).set(k, false);
+					new_map.get(k).set(k, false);
 				}
 				k++;
 			}
