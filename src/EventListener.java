@@ -40,7 +40,7 @@ public class EventListener {
         
         
         
-        this.pathOfFile=path.toString();
+        //this.pathOfFile=path.toString();
         
         
         if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) 
@@ -83,6 +83,7 @@ public class EventListener {
 
                     registerDir(path, watchService);
                     
+                    this.pathOfFile=path.toString();
                     this.nameOfFile=watchEvent.context().toString();
                     this.actionOnFile=watchEvent.kind().toString();
                 }
@@ -100,6 +101,7 @@ public class EventListener {
 
                     registerDir(path, watchService);
                     
+                    this.pathOfFile=path.toString();
                     this.nameOfFile=watchEvent.context().toString();
                     this.actionOnFile=watchEvent.kind().toString();
                    
@@ -118,6 +120,7 @@ public class EventListener {
 
                     registerDir(path, watchService);
                     
+                    this.pathOfFile=path.toString();                    
                     this.nameOfFile=watchEvent.context().toString();
                     this.actionOnFile=watchEvent.kind().toString();
                 }
