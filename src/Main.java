@@ -21,6 +21,11 @@ public class Main {
 		
 		//Data.DisplayMap(hmap);
 		System.out.println(Arrays.toString(hmap.get(1).toByteArray()));
+		
+		DataReformation ref = new DataReformation(hmap);
+		BitSet reass = ref.getReassembledBitArray();
+		
+		System.out.println(reass);
 	}
 
 }

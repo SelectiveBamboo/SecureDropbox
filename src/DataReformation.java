@@ -1,5 +1,6 @@
 /*
  * Here we're doing the exact opposite of DataSplitting. Having in parameter an HashMap <Integer, BitSet>
+
  * and returning a bitset array with all the bits replaced as they were before DataSplitting.
  * 
  */
@@ -24,11 +25,12 @@ public class DataReformation {
 			 * and because the before last is handled in another way after this loop since it is not always relevant
 			 */
 		{
-			for (int j = 1; j <= nbLastArray; j++) 
+			for (int j = 0; j < nbLastArray; j++) 
 			{
 				if (hmap.get(j).get(i)) 
 				{
 					reassembledBitArray.set(indexBitArray);
+					
 				}
 				
 				indexBitArray++;
@@ -36,20 +38,20 @@ public class DataReformation {
 		}	
 		
 		boolean isIndexRelevant = true;
-		int j = 1;
+		int j = 0;
 		
 		do		//We iterate until we found the last relevant bit or until we reach the end of the hashmap
 		{
-			if (hmap.get(j).get(hmap.get(1).length() -2)) 
+			if (hmap.get(j).get(hmap.get(0).length() -2)) 
 			{
 				reassembledBitArray.set(indexBitArray);
 			}
 			
 			j++;
 			
-			if (j <= nbLastArray) 
+			if (j < nbLastArray) 
 			{
-				if (hmap.get(j).length() != hmap.get(1).length())
+				if (hmap.get(j).length() != hmap.get(0).length())
 				{
 					isIndexRelevant = false;
 				}
